@@ -1,287 +1,564 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>twinkfrix@terminal</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>twinkfrix@arch:~</title>
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yaroslav2282087.github.io/">
+    <meta property="og:title" content="twinkfrix@arch:~ // personal terminal">
+    <meta property="og:description" content="Инициализация протокола... Готово. Введите help для списка команд.">
+    <meta name="theme-color" content="#a78bfa">
 
-    body {
-      background: #0a0a0a;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
-      padding: 1rem;
-    }
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d0d11' stroke='%23a78bfa' stroke-width='6'/><text x='18' y='68' font-family='monospace' font-size='55' font-weight='bold' fill='%23a78bfa'>&gt;_</text></svg>">
 
-    .window {
-      width: 100%;
-      max-width: 750px;
-      background: #121212;
-      border-radius: 10px;
-      border: 1px solid #2a2a2a;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-      overflow: hidden;
-    }
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ─── Title bar ─── */
-    .titlebar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      background: #1a1a1a;
-      border-bottom: 1px solid #2a2a2a;
-    }
-    .dot { width: 12px; height: 12px; border-radius: 50%; }
-    .dot.red { background: #ff5f57; }
-    .dot.yellow { background: #ffbd2e; }
-    .dot.green { background: #28c840; }
-    .titlebar span {
-      flex: 1;
-      text-align: center;
-      color: #555;
-      font-size: 0.8rem;
-      margin-right: 52px; /* компенсация точек для центрирования */
-    }
+        body {
+            background-color: #06060a;
+            background-image: radial-gradient(ellipse at 30% 50%, #0d0a1a 0%, #06060a 70%);
+            font-family: 'Courier New', Consolas, Monaco, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            color: #d4d4d8;
+            overflow: hidden;
+        }
 
-    /* ─── Terminal body ─── */
-    .terminal {
-      padding: 1.2rem;
-      height: 480px;
-      overflow-y: auto;
-      font-size: 0.9rem;
-      line-height: 1.6;
-    }
+        .terminal-window {
+            width: 100%;
+            max-width: 720px;
+            height: 500px;
+            background-color: #0d0d11;
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(167, 139, 250, 0.05), 0 30px 70px rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #1e1e28;
+        }
 
-    .terminal::-webkit-scrollbar { width: 6px; }
-    .terminal::-webkit-scrollbar-track { background: transparent; }
-    .terminal::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        .title-bar {
+            background-color: #131318;
+            padding: 11px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #1a1a22;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .dots { display: flex; gap: 8px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.r { background: #ff5f57; }
+        .dot.y { background: #ffbd2e; }
+        .dot.g { background: #27c93f; }
+        .title {
+            flex-grow: 1;
+            text-align: center;
+            color: #555;
+            font-size: 0.82rem;
+            margin-right: 44px;
+        }
 
-    /* Цвета текста */
-    .output-line { color: #ccc; white-space: pre-wrap; word-break: break-word; }
-    .green { color: #28c840; }
-    .cyan { color: #06b6d4; }
-    .yellow { color: #ffbd2e; }
-    .red { color: #ff5f57; }
-    .purple { color: #a78bfa; }
-    .dim { color: #555; }
-    .bold { font-weight: 700; }
+        .terminal-body {
+            padding: 20px;
+            flex-grow: 1;
+            overflow-y: auto;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            cursor: text;
+            display: flex;
+            flex-direction: column;
+            text-shadow: 0 0 3px rgba(167, 139, 250, 0.08);
+        }
 
-    /* ─── Input line ─── */
-    .input-line {
-      display: flex;
-      align-items: center;
-      color: #ccc;
-    }
+        .terminal-body.fullscreen-mode #output { flex-grow: 1; }
+        .terminal-body.fullscreen-mode .input-line { margin-top: auto; padding-top: 10px; }
 
-    .prompt {
-      color: #28c840;
-      font-weight: 700;
-      white-space: nowrap;
-      margin-right: 0.5rem;
-    }
-    .prompt .at { color: #555; }
-    .prompt .host { color: #06b6d4; }
-    .prompt .path { color: #a78bfa; }
+        #output { display: flex; flex-direction: column; }
 
-    .input-line input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #e0e0e0;
-      font-family: inherit;
-      font-size: inherit;
-      caret-color: #28c840;
-    }
+        .output-line {
+            margin-bottom: 7px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
 
-    /* ─── Ссылки ─── */
-    .terminal a {
-      color: #06b6d4;
-      text-decoration: none;
-    }
-    .terminal a:hover {
-      text-decoration: underline;
-    }
+        .prompt-user {
+            color: #a78bfa;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
+        }
+        .prompt-sep { color: #d4d4d8; }
+        .prompt-dir {
+            color: #38bdf8;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.35);
+        }
 
-    /* ─── Typing animation for boot ─── */
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
-    }
-  </style>
+        .input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+        .prompt { margin-right: 8px; white-space: nowrap; }
+
+        #cmd-input {
+            background: transparent;
+            border: none;
+            color: #d4d4d8;
+            font-family: inherit;
+            font-size: inherit;
+            flex-grow: 1;
+            outline: none;
+            caret-color: #a78bfa;
+        }
+
+        a {
+            color: #a78bfa;
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(167, 139, 250, 0.5);
+            transition: 0.2s;
+        }
+        a:hover { color: #fff; border-bottom-color: #fff; }
+
+        .cmd-hl {
+            color: #f0abfc;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(240, 171, 252, 0.3);
+        }
+        .accent { color: #a78bfa; }
+        .accent2 { color: #38bdf8; }
+        .warn { color: #fbbf24; }
+        .err { color: #f87171; }
+        .dim { color: #52525b; }
+        .ok { color: #4ade80; }
+
+        .typing-cursor::after {
+            content: '▋';
+            color: #a78bfa;
+            animation: blink 0.8s step-end infinite;
+            margin-left: 2px;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* ─── Snake ─── */
+        .snake-box {
+            position: relative;
+            width: 100%;
+            height: 340px;
+            margin: 4px 0;
+            border: 1px solid #1e1e28;
+            border-radius: 6px;
+            background: #09090d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+            flex-shrink: 0;
+        }
+        .snake-header {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #777;
+            margin-bottom: 6px;
+        }
+        .snake-score { color: #a78bfa; font-weight: bold; }
+        .snake-canvas {
+            background: #0d0d11;
+            border: 2px solid #2a2a35;
+            border-radius: 4px;
+            image-rendering: pixelated;
+            max-width: 100%;
+        }
+
+        /* ─── Matrix rain ─── */
+        .matrix-box {
+            position: relative;
+            width: 100%;
+            height: 340px;
+            margin: 4px 0;
+            border: 1px solid #1a2e1a;
+            border-radius: 6px;
+            background: #000;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .matrix-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .terminal-body::-webkit-scrollbar { width: 5px; }
+        .terminal-body::-webkit-scrollbar-thumb { background: #2a2a35; border-radius: 3px; }
+    </style>
 </head>
 <body>
 
-<div class="window">
-  <div class="titlebar">
-    <div class="dot red"></div>
-    <div class="dot yellow"></div>
-    <div class="dot green"></div>
-    <span>twinkfrix@terminal: ~</span>
-  </div>
-
-  <div class="terminal" id="terminal">
-    <!-- всё выводится сюда через JS -->
-  </div>
+<div class="terminal-window" onclick="focusInput()">
+    <div class="title-bar">
+        <div class="dots">
+            <div class="dot r"></div>
+            <div class="dot y"></div>
+            <div class="dot g"></div>
+        </div>
+        <div class="title">twinkfrix@arch: ~</div>
+    </div>
+    <div class="terminal-body" id="terminal-body">
+        <div id="output"></div>
+        <div class="input-line" id="input-container" style="display:none;">
+            <span class="prompt"><span class="prompt-user">twinkfrix@arch</span><span class="prompt-sep">:</span><span class="prompt-dir">~</span><span class="prompt-sep">$</span></span>
+            <input type="text" id="cmd-input" autocomplete="off" spellcheck="false">
+        </div>
+    </div>
 </div>
 
 <script>
-const terminal = document.getElementById('terminal');
+const output = document.getElementById('output');
+const inputContainer = document.getElementById('input-container');
+const cmdInput = document.getElementById('cmd-input');
+const terminalBody = document.getElementById('terminal-body');
 
-// ══════════ Команды ══════════
+let isTyping = false;
 
+// ═══ Активные режимы ═══
+let snakeTimer = null;
+let snakeKeyHandler = null;
+let matrixRAF = null;
+
+function stopSnake() {
+    if (snakeTimer) { clearInterval(snakeTimer); snakeTimer = null; }
+    if (snakeKeyHandler) { window.removeEventListener('keydown', snakeKeyHandler); snakeKeyHandler = null; }
+}
+function stopMatrix() {
+    if (matrixRAF) { cancelAnimationFrame(matrixRAF); matrixRAF = null; }
+}
+function cleanup() {
+    stopSnake();
+    stopMatrix();
+    terminalBody.classList.remove('fullscreen-mode');
+}
+
+function focusInput() { if (!isTyping) cmdInput.focus(); }
+
+function escapeHtml(t) { const d = document.createElement('div'); d.innerText = t; return d.innerHTML; }
+
+// ═══ Печать с эффектом ═══
+function typeHTML(el, html, speed = 18, cb) {
+    isTyping = true;
+    inputContainer.style.display = 'none';
+    el.classList.add('typing-cursor');
+    let i = 0, cur = '';
+
+    function step() {
+        if (i < html.length) {
+            if (html[i] === '<') {
+                const end = html.indexOf('>', i);
+                if (end !== -1) { cur += html.substring(i, end + 1); i = end + 1; }
+            } else { cur += html[i]; i++; }
+            el.innerHTML = cur;
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+            setTimeout(step, speed);
+        } else {
+            el.classList.remove('typing-cursor');
+            isTyping = false;
+            inputContainer.style.display = 'flex';
+            cmdInput.focus();
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+            if (cb) cb();
+        }
+    }
+    step();
+}
+
+// ═══ Загрузочная анимация с точками ═══
+function typeWithDots(el, baseText, onDone) {
+    isTyping = true;
+    inputContainer.style.display = 'none';
+    el.classList.add('typing-cursor');
+    let ci = 0;
+
+    function typeBase() {
+        if (ci < baseText.length) {
+            el.textContent += baseText[ci]; ci++;
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+            setTimeout(typeBase, 18);
+        } else { doDots(); }
+    }
+    function doDots() {
+        let s = 0;
+        const timer = setInterval(() => {
+            el.textContent = baseText + '.'.repeat((s % 3) + 1);
+            s++;
+            if (s >= 6) {
+                clearInterval(timer);
+                setTimeout(() => {
+                    el.classList.remove('typing-cursor');
+                    isTyping = false;
+                    if (onDone) onDone();
+                }, 250);
+            }
+        }, 330);
+    }
+    typeBase();
+}
+
+// ═══ ASCII арт ника ═══
+const asciiLogo = `<span class="accent">
+ ████████╗██╗    ██╗██╗███╗   ██╗██╗  ██╗
+ ╚══██╔══╝██║    ██║██║████╗  ██║██║ ██╔╝
+    ██║   ██║ █╗ ██║██║██╔██╗ ██║█████╔╝
+    ██║   ██║███╗██║██║██║╚██╗██║██╔═██╗
+    ██║   ╚███╔███╔╝██║██║ ╚████║██║  ██╗
+    ╚═╝    ╚══╝╚══╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝
+</span><span class="dim">          ~ twinkfrix terminal v1.0 ~</span>`;
+
+// ═══ Команды ═══
 const commands = {
+    help: () =>
+`<span class="cmd-hl">help</span>      <span class="dim">—</span>  помощь по командам
+<span class="cmd-hl">about</span>     <span class="dim">—</span>  пара слов обо мне
+<span class="cmd-hl">socials</span>   <span class="dim">—</span>  ссылки на соц. сети
+<span class="cmd-hl">ascii</span>     <span class="dim">—</span>  ASCII-арт логотип
+<span class="cmd-hl">snake</span>     <span class="dim">—</span>  🐍 игра змейка
+<span class="cmd-hl">matrix</span>    <span class="dim">—</span>  💊 красная таблетка
+<span class="cmd-hl">clear</span>     <span class="dim">—</span>  очистить терминал`,
 
-  help: () => [
-    '<span class="yellow bold">╔══════════════════════════════════════╗</span>',
-    '<span class="yellow bold">║         СПИСОК КОМАНД               ║</span>',
-    '<span class="yellow bold">╚══════════════════════════════════════╝</span>',
-    '',
-    '  <span class="green bold">help</span>      <span class="dim">—</span>  помощь по командам',
-    '  <span class="green bold">about</span>     <span class="dim">—</span>  пара слов обо мне',
-    '  <span class="green bold">socials</span>   <span class="dim">—</span>  ссылки на соц. сети',
-    '  <span class="green bold">clear</span>     <span class="dim">—</span>  очистить терминал',
-    '',
-  ],
+    about: () =>
+`<span class="accent2">┌──────────────────────────────────┐</span>
+<span class="accent2">│</span>  <span class="accent">ник:</span>      twinkfrix
+<span class="accent2">│</span>  <span class="accent">возраст:</span>  секрет :)
+<span class="accent2">│</span>  <span class="accent">занятие:</span>  делаю штуки
+<span class="accent2">│</span>  <span class="accent">стек:</span>    всё подряд
+<span class="accent2">│</span>
+<span class="accent2">│</span>  <span class="dim">// тут когда-нибудь будет что-то</span>
+<span class="accent2">│</span>  <span class="dim">// а пока просто терминал</span>
+<span class="accent2">└──────────────────────────────────┘</span>`,
 
-  about: () => [
-    '<span class="cyan bold">╔══════════════════════════════════════╗</span>',
-    '<span class="cyan bold">║         ABOUT ME                     ║</span>',
-    '<span class="cyan bold">╚══════════════════════════════════════╝</span>',
-    '',
-    '  <span class="purple bold">Ник:</span>       twinkfrix',
-    '  <span class="purple bold">Занятие:</span>   делаю штуки в интернете',
-    '  <span class="purple bold">Стек:</span>      всё подряд',
-    '',
-    '  <span class="dim">// здесь будет что-то поинтереснее, но позже</span>',
-    '',
-  ],
+    socials: () =>
+`<span class="accent">▸</span> Telegram   <span class="dim">—</span>  <a href="https://t.me/your_username" target="_blank">t.me/your_username</a>
+<span class="accent">▸</span> Discord    <span class="dim">—</span>  <a href="https://discord.com/users/your_id" target="_blank">twinkfrix</a>
+<span class="accent">▸</span> GitHub     <span class="dim">—</span>  <a href="https://github.com/yaroslav2282087" target="_blank">github.com/yaroslav2282087</a>
+<span class="accent">▸</span> Steam      <span class="dim">—</span>  <a href="https://steamcommunity.com/id/your_id" target="_blank">steam/your_id</a>`,
 
-  socials: () => [
-    '<span class="purple bold">╔══════════════════════════════════════╗</span>',
-    '<span class="purple bold">║         SOCIALS                      ║</span>',
-    '<span class="purple bold">╚══════════════════════════════════════╝</span>',
-    '',
-    '  <span class="green">▸</span> Telegram   <span class="dim">—</span>  <a href="https://t.me/your_username" target="_blank">t.me/your_username</a>',
-    '  <span class="green">▸</span> Discord    <span class="dim">—</span>  <a href="https://discord.com/users/your_id" target="_blank">twinkfrix</a>',
-    '  <span class="green">▸</span> GitHub     <span class="dim">—</span>  <a href="https://github.com/yaroslav2282087" target="_blank">github.com/yaroslav2282087</a>',
-    '  <span class="green">▸</span> Steam      <span class="dim">—</span>  <a href="https://steamcommunity.com/id/your_id" target="_blank">steamcommunity.com/id/your_id</a>',
-    '',
-  ],
-
-  clear: () => {
-    terminal.innerHTML = '';
-    createInputLine();
-    return null; // не выводим ничего
-  },
+    ascii: () => asciiLogo,
 };
 
-// ══════════ Утилиты ══════════
+// ═══ Matrix rain ═══
+function spawnMatrix(container) {
+    container.innerHTML = '';
+    terminalBody.classList.add('fullscreen-mode');
 
-function printLines(linesArray) {
-  linesArray.forEach(line => {
-    const div = document.createElement('div');
-    div.classList.add('output-line');
-    div.innerHTML = line;
-    terminal.appendChild(div);
-  });
-}
+    const wrapper = document.createElement('div');
+    wrapper.className = 'matrix-box';
+    const canvas = document.createElement('canvas');
+    canvas.className = 'matrix-canvas';
+    wrapper.appendChild(canvas);
+    container.appendChild(wrapper);
 
-function printText(text, className = '') {
-  const div = document.createElement('div');
-  div.classList.add('output-line');
-  if (className) div.classList.add(className);
-  div.innerHTML = text;
-  terminal.appendChild(div);
-}
+    const ctx = canvas.getContext('2d');
+    canvas.width = wrapper.clientWidth || 680;
+    canvas.height = 340;
 
-function createInputLine() {
-  const wrapper = document.createElement('div');
-  wrapper.classList.add('input-line');
+    const fontSize = 14;
+    const cols = Math.floor(canvas.width / fontSize);
+    const drops = Array(cols).fill(1);
+    const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
 
-  const prompt = document.createElement('span');
-  prompt.classList.add('prompt');
-  prompt.innerHTML = '<span class="green bold">twinkfrix</span><span class="at">@</span><span class="host">terminal</span>:<span class="path">~</span>$';
+    function draw() {
+        if (!document.body.contains(canvas)) { stopMatrix(); return; }
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#0f0';
+        ctx.font = fontSize + 'px monospace';
 
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.autofocus = true;
-  input.spellcheck = false;
-  input.autocomplete = 'off';
+        for (let i = 0; i < drops.length; i++) {
+            const ch = chars[Math.floor(Math.random() * chars.length)];
+            const x = i * fontSize;
+            const y = drops[i] * fontSize;
 
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const cmd = input.value.trim().toLowerCase();
-      input.disabled = true;
+            ctx.fillStyle = Math.random() > 0.96 ? '#fff' : `hsl(${120 + Math.random()*20}, 100%, ${45 + Math.random()*20}%)`;
+            ctx.fillText(ch, x, y);
 
-      // Показать что ввёл пользователь (строка остаётся)
-      if (cmd === '') {
-        createInputLine();
-        return;
-      }
-
-      if (commands[cmd]) {
-        const result = commands[cmd]();
-        if (result) {
-          printLines(result);
+            if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
         }
-      } else {
-        printText(`<span class="red">✗</span> Команда "<span class="yellow">${cmd}</span>" не найдена. Введите <span class="green">help</span> для списка команд.`);
-        printText('');
-      }
-
-      if (cmd !== 'clear') {
-        createInputLine();
-      }
+        matrixRAF = requestAnimationFrame(draw);
     }
-  });
+    draw();
 
-  wrapper.appendChild(prompt);
-  wrapper.appendChild(input);
-  terminal.appendChild(wrapper);
-
-  // Авто-скролл вниз
-  terminal.scrollTop = terminal.scrollHeight;
-  input.focus();
+    inputContainer.style.display = 'flex';
+    cmdInput.focus();
+    terminalBody.scrollTop = terminalBody.scrollHeight;
 }
 
-// Клик по терминалу — фокус на текущий input
-terminal.addEventListener('click', () => {
-  const inputs = terminal.querySelectorAll('input:not([disabled])');
-  if (inputs.length) inputs[inputs.length - 1].focus();
-});
+// ═══ Snake ═══
+function spawnSnake(container) {
+    container.innerHTML = '';
+    terminalBody.classList.add('fullscreen-mode');
 
-// ══════════ Boot sequence ══════════
+    const wrapper = document.createElement('div');
+    wrapper.className = 'snake-box';
 
-const bootLines = [
-  { text: '<span class="dim">[system]</span> Инициализация протокола...', delay: 0 },
-  { text: '<span class="dim">[system]</span> Загрузка модулей <span class="green">████████████████████</span> 100%', delay: 800 },
-  { text: '<span class="dim">[system]</span> <span class="green bold">Готово.</span>', delay: 1500 },
-  { text: '', delay: 1800 },
-  { text: 'Добро пожаловать в <span class="cyan bold">twinkfrix</span> terminal v1.0', delay: 2000 },
-  { text: 'Введите <span class="green bold">help</span> для списка команд.', delay: 2200 },
-  { text: '', delay: 2400 },
-];
+    const header = document.createElement('div');
+    header.className = 'snake-header';
+    header.innerHTML = `<span>стрелки — движение | R — рестарт</span><span class="snake-score" id="snake-score">счёт: 0</span>`;
+    wrapper.appendChild(header);
 
-bootLines.forEach(({ text, delay }) => {
-  setTimeout(() => {
-    printText(text);
-    terminal.scrollTop = terminal.scrollHeight;
+    const canvas = document.createElement('canvas');
+    canvas.className = 'snake-canvas';
+    canvas.width = 440; canvas.height = 280;
+    wrapper.appendChild(canvas);
+    container.appendChild(wrapper);
 
-    // После последней строки — показать инпут
-    if (delay === bootLines[bootLines.length - 1].delay) {
-      setTimeout(() => createInputLine(), 200);
+    const ctx = canvas.getContext('2d');
+    const grid = 20;
+    const cols = canvas.width / grid;
+    const rows = canvas.height / grid;
+
+    let snake, dir, nextDir, food, score, gameOver;
+
+    function init() {
+        snake = [{x:6,y:7},{x:5,y:7},{x:4,y:7}];
+        dir = {x:1,y:0}; nextDir = {x:1,y:0};
+        score = 0; gameOver = false;
+        const s = document.getElementById('snake-score');
+        if (s) s.textContent = 'счёт: 0';
+        placeFood();
     }
-  }, delay);
-});
+    function placeFood() {
+        while (true) {
+            const fx = Math.floor(Math.random()*cols);
+            const fy = Math.floor(Math.random()*rows);
+            if (!snake.some(s => s.x===fx && s.y===fy)) { food={x:fx,y:fy}; break; }
+        }
+    }
+    function draw() {
+        ctx.fillStyle = '#0d0d11';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.strokeStyle = '#141419'; ctx.lineWidth = 1;
+        for (let x=0;x<=canvas.width;x+=grid) { ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke(); }
+        for (let y=0;y<=canvas.height;y+=grid) { ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke(); }
 
+        ctx.fillStyle = '#f0abfc';
+        ctx.fillRect(food.x*grid+3, food.y*grid+3, grid-6, grid-6);
+
+        snake.forEach((seg,i) => {
+            ctx.fillStyle = i===0 ? '#a78bfa' : '#6d52b0';
+            ctx.fillRect(seg.x*grid+2, seg.y*grid+2, grid-4, grid-4);
+        });
+
+        if (gameOver) {
+            ctx.fillStyle = 'rgba(10,10,13,0.85)';
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = '#f87171'; ctx.font = 'bold 20px monospace'; ctx.textAlign = 'center';
+            ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2-10);
+            ctx.fillStyle = '#d4d4d8'; ctx.font = '13px monospace';
+            ctx.fillText('R — рестарт | введи команду внизу', canvas.width/2, canvas.height/2+18);
+        }
+    }
+    function step() {
+        if (!document.body.contains(canvas)) { stopSnake(); return; }
+        if (gameOver) return;
+        dir = nextDir;
+        const head = { x: snake[0].x+dir.x, y: snake[0].y+dir.y };
+        if (head.x<0||head.x>=cols||head.y<0||head.y>=rows||snake.some(s=>s.x===head.x&&s.y===head.y)) {
+            gameOver = true; draw(); return;
+        }
+        snake.unshift(head);
+        if (head.x===food.x && head.y===food.y) {
+            score++;
+            const s = document.getElementById('snake-score');
+            if (s) s.textContent = `счёт: ${score}`;
+            placeFood();
+        } else snake.pop();
+        draw();
+    }
+
+    snakeKeyHandler = (e) => {
+        if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+            e.preventDefault();
+            if (e.key==='ArrowUp'&&dir.y===0) nextDir={x:0,y:-1};
+            if (e.key==='ArrowDown'&&dir.y===0) nextDir={x:0,y:1};
+            if (e.key==='ArrowLeft'&&dir.x===0) nextDir={x:-1,y:0};
+            if (e.key==='ArrowRight'&&dir.x===0) nextDir={x:1,y:0};
+        } else if ((e.key==='r'||e.key==='R'||e.key==='к'||e.key==='К')&&cmdInput.value==='') {
+            e.preventDefault(); init(); draw();
+        }
+    };
+    window.addEventListener('keydown', snakeKeyHandler);
+    init(); draw();
+    snakeTimer = setInterval(step, 160);
+
+    inputContainer.style.display = 'flex';
+    cmdInput.focus();
+    terminalBody.scrollTop = terminalBody.scrollHeight;
+}
+
+// ═══ Boot ═══
+window.onload = () => {
+    const line = document.createElement('div');
+    line.className = 'output-line';
+    output.appendChild(line);
+    typeHTML(line, 'Инициализация протокола... <span class="ok">Готово.</span> Введите <span class="cmd-hl">help</span> для списка команд.', 22);
+};
+
+// ═══ Обработка ввода ═══
+cmdInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !isTyping) {
+        const raw = this.value;
+        const cmd = raw.trim().toLowerCase();
+        this.value = '';
+
+        if (terminalBody.classList.contains('fullscreen-mode')) {
+            output.innerHTML = '';
+            cleanup();
+        }
+
+        if (cmd === 'clear') { output.innerHTML = ''; cleanup(); return; }
+
+        // Строка ввода пользователя
+        const cmdLine = document.createElement('div');
+        cmdLine.className = 'output-line';
+        cmdLine.innerHTML = `<span class="prompt"><span class="prompt-user">twinkfrix@arch</span><span class="prompt-sep">:</span><span class="prompt-dir">~</span><span class="prompt-sep">$</span></span> ${escapeHtml(raw)}`;
+        output.appendChild(cmdLine);
+
+        if (cmd === 'snake') { spawnSnake(output); return; }
+
+        if (cmd === 'matrix') {
+            const ld = document.createElement('div');
+            ld.className = 'output-line';
+            output.appendChild(ld);
+            typeWithDots(ld, 'загрузка матрицы', () => spawnMatrix(output));
+            return;
+        }
+
+        if (cmd !== '') {
+            const resp = document.createElement('div');
+            resp.className = 'output-line';
+            output.appendChild(resp);
+
+            let html;
+            if (commands[cmd]) {
+                html = commands[cmd]();
+            } else {
+                html = `<span class="err">bash: ${escapeHtml(cmd)}: команда не найдена. Введите </span><span class="cmd-hl">help</span><span class="err"> для списка команд.</span>`;
+            }
+            typeHTML(resp, html, 16);
+        }
+        terminalBody.scrollTop = terminalBody.scrollHeight;
+    }
+});
 </script>
 </body>
 </html>
