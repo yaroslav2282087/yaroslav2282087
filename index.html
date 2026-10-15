@@ -4,73 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- Open Graph & SEO -->
   <title>twinkfrix@linux:~</title>
   <meta name="title" content="twinkfrix@linux:~">
-  <meta name="description" content="twinkfrix (yaroslav2282087) — личный терминал разработчика. Стек, проекты, системный инфо-блок и интерактивные утилиты.">
-  <meta name="author" content="twinkfrix">
+  <meta name="description" content="Терминал twinkfrix (yaroslav2282087). Обо мне, контакты и стек.">
   <meta name="theme-color" content="#000000">
 
+  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yaroslav2282087.github.io/">
   <meta property="og:title" content="twinkfrix@linux:~">
-  <meta property="og:description" content="twinkfrix (yaroslav2282087) — терминал разработчика. Стек, контакты, Nyan Cat и матрица.">
-
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://yaroslav2282087.github.io/">
-  <meta property="twitter:title" content="twinkfrix@linux:~">
-  <meta property="twitter:description" content="twinkfrix (yaroslav2282087) — терминал разработчика.">
+  <meta property="og:description" content="Терминал twinkfrix. Обо мне, контакты и стек.">
 
   <style>
     :root {
-      --bg-body: #000000;
-      --bg-terminal: #07090e;
-      --bg-header: #0e1118;
-      --border-color: #1e2433;
-      --text-main: #e2e8f0;
+      --bg-black: #000000;
+      --term-bg: #0a0a0c;
+      --term-header: #121216;
+      --term-border: #1e1e24;
+      --text: #e4e4e7;
       
-      --c-user: #10b981;
-      --c-host: #38bdf8;
-      --c-path: #fbbf24;
-      --c-cyan: #22d3ee;
-      --c-purple: #c084fc;
-      --c-red: #f87171;
-      --c-dim: #64748b;
-      --c-white: #ffffff;
-      --c-accent: #38bdf8;
-
-      --font-mono: ui-monospace, "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, monospace;
-    }
-
-    /* Альтернативные темы через команду theme */
-    body.theme-matrix {
-      --bg-terminal: #020b05;
-      --border-color: #064e1e;
-      --text-main: #4ade80;
       --c-user: #22c55e;
-      --c-host: #16a34a;
-      --c-path: #86efac;
-      --c-accent: #22c55e;
-    }
+      --c-host: #38bdf8;
+      --c-path: #eab308;
+      --c-dim: #71717a;
+      --c-cyan: #06b6d4;
+      --c-purple: #c084fc;
+      --c-red: #ef4444;
 
-    body.theme-cyber {
-      --bg-terminal: #0a0614;
-      --border-color: #3b145a;
-      --text-main: #f5d0fe;
-      --c-user: #f43f5e;
-      --c-host: #06b6d4;
-      --c-path: #e879f9;
-      --c-accent: #d946ef;
-    }
-
-    body.theme-amber {
-      --bg-terminal: #0e0a02;
-      --border-color: #452c08;
-      --text-main: #fde68a;
-      --c-user: #f59e0b;
-      --c-host: #fbbf24;
-      --c-path: #d97706;
-      --c-accent: #f59e0b;
+      --font: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
     }
 
     * {
@@ -80,123 +41,93 @@
     }
 
     body {
-      background-color: var(--bg-body);
-      color: var(--text-main);
-      font-family: var(--font-mono);
+      background: var(--bg-black);
+      color: var(--text);
+      font-family: var(--font);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 18px;
+      padding: 16px;
       overflow-x: hidden;
-      position: relative;
     }
 
-    /* Фоновый кибер-эффект */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: 
-        radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.05) 0%, transparent 80%),
-        repeating-linear-gradient(rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(255, 255, 255, 0.012) 3px, rgba(255, 255, 255, 0.012) 4px);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* Окно терминала */
-    .terminal-window {
+    /* Компактное окно терминала */
+    .terminal {
       width: 100%;
-      max-width: 1060px;
-      height: 88vh;
-      max-height: 880px;
-      min-height: 520px;
-      background: var(--bg-terminal);
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      box-shadow: 
-        0 0 50px rgba(0, 0, 0, 0.95),
-        0 0 20px rgba(56, 189, 248, 0.06);
+      max-width: 680px;
+      height: 480px;
+      background: var(--term-bg);
+      border: 1px solid var(--term-border);
+      border-radius: 8px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.9), 0 0 1px rgba(255, 255, 255, 0.1);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       position: relative;
-      z-index: 1;
-      backdrop-filter: blur(8px);
     }
 
-    /* Шапка окна */
+    /* Верхняя панель */
     .terminal-header {
-      background: var(--bg-header);
-      height: 42px;
+      background: var(--term-header);
+      height: 34px;
       display: flex;
       align-items: center;
-      padding: 0 16px;
-      border-bottom: 1px solid var(--border-color);
+      padding: 0 12px;
+      border-bottom: 1px solid var(--term-border);
       user-select: none;
     }
 
-    .window-controls {
+    .controls {
       display: flex;
-      gap: 8px;
+      gap: 7px;
     }
 
     .dot {
-      width: 12px;
-      height: 12px;
+      width: 11px;
+      height: 11px;
       border-radius: 50%;
-      display: inline-block;
-      transition: transform 0.2s ease, opacity 0.2s;
       cursor: pointer;
     }
-    .dot:hover { transform: scale(1.15); }
-    .dot-close { background: #ef4444; }
-    .dot-min { background: #f59e0b; }
-    .dot-max { background: #10b981; }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
 
-    .window-title {
+    .title {
       flex: 1;
       text-align: center;
-      font-size: 13px;
+      font-size: 12px;
       color: var(--c-dim);
-      font-weight: 600;
-      letter-spacing: 0.6px;
-      margin-right: 52px;
+      font-weight: 500;
+      margin-right: 42px;
     }
 
     /* Тело консоли */
     .terminal-body {
       flex: 1;
-      padding: 22px;
+      padding: 16px;
       overflow-y: auto;
-      font-size: 14px;
-      line-height: 1.62;
-      word-break: break-word;
+      font-size: 13.5px;
+      line-height: 1.55;
       cursor: text;
     }
 
     .terminal-body::-webkit-scrollbar {
-      width: 8px;
-    }
-    .terminal-body::-webkit-scrollbar-track {
-      background: transparent;
+      width: 5px;
     }
     .terminal-body::-webkit-scrollbar-thumb {
-      background: #1f293d;
-      border-radius: 4px;
-    }
-    .terminal-body::-webkit-scrollbar-thumb:hover {
-      background: #334155;
+      background: #27272a;
+      border-radius: 3px;
     }
 
-    /* Вывод истории */
     .history-entry {
-      margin-bottom: 14px;
+      margin-bottom: 8px;
     }
 
     .output {
-      margin: 6px 0 14px 0;
+      margin: 4px 0 10px 0;
       white-space: pre-wrap;
+      word-break: break-word;
     }
 
     /* Промпт */
@@ -204,28 +135,24 @@
       display: flex;
       align-items: center;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 5px;
     }
 
-    .prompt-prefix {
+    .prompt {
       display: inline-flex;
-      align-items: center;
       user-select: none;
       white-space: nowrap;
     }
 
-    .user { color: var(--c-user); font-weight: bold; }
-    .at { color: var(--c-dim); }
-    .host { color: var(--c-host); font-weight: bold; }
-    .colon { color: var(--c-dim); }
-    .path { color: var(--c-path); }
-    .char { color: var(--text-main); font-weight: bold; margin-left: 2px; }
+    .u { color: var(--c-user); font-weight: 600; }
+    .h { color: var(--c-host); font-weight: 600; }
+    .p { color: var(--c-path); }
+    .d { color: var(--c-dim); }
 
-    .input-wrapper {
+    .input-box {
       display: flex;
-      align-items: center;
       flex: 1;
-      min-width: 140px;
+      min-width: 120px;
     }
 
     .cmd-input {
@@ -241,160 +168,96 @@
       margin: 0;
     }
 
-    /* Стилизация и цвета текста */
+    /* Цвета и ссылки */
     .c-green { color: var(--c-user); }
-    .c-blue { color: var(--c-host); }
     .c-cyan { color: var(--c-cyan); }
     .c-yellow { color: var(--c-path); }
     .c-purple { color: var(--c-purple); }
     .c-red { color: var(--c-red); }
     .c-dim { color: var(--c-dim); }
-    .c-white { color: var(--c-white); }
-    .b { font-weight: bold; }
+    .b { font-weight: 600; }
 
     .term-link {
       color: var(--c-cyan);
       text-decoration: none;
       border-bottom: 1px dashed var(--c-cyan);
-      transition: all 0.2s;
     }
     .term-link:hover {
-      color: #bae6fd;
       border-bottom-style: solid;
-      text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
     }
 
-    .separator {
-      border-top: 1px dashed var(--border-color);
-      margin: 10px 0;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 1px 7px;
-      font-size: 11.5px;
-      border-radius: 4px;
-      background: #131d2e;
-      border: 1px solid #233552;
-      color: var(--c-cyan);
-      margin-right: 4px;
-    }
-
-    .grid-table {
+    .cmd-row {
       display: grid;
-      grid-template-columns: 170px 1fr;
-      row-gap: 6px;
-      column-gap: 12px;
-      margin: 8px 0;
-    }
-
-    .pagination-bar {
-      margin-top: 10px;
-      padding: 6px 10px;
-      background: rgba(255, 255, 255, 0.03);
-      border-left: 3px solid var(--c-host);
-      font-size: 13px;
-    }
-
-    .ascii-box {
-      font-family: monospace;
-      font-size: 11px;
-      line-height: 1.18;
-      overflow-x: auto;
+      grid-template-columns: 100px 1fr;
+      row-gap: 4px;
       margin: 6px 0;
-      color: var(--c-cyan);
     }
 
-    /* Полноэкранные холсты для Nyan Cat и Matrix */
-    .fullscreen-overlay {
+    /* Оверлей Nyan Cat */
+    #nyan-canvas {
       position: absolute;
-      top: 42px;
+      top: 34px;
       left: 0;
       width: 100%;
-      height: calc(100% - 42px);
-      z-index: 20;
+      height: calc(100% - 34px);
+      z-index: 10;
       display: none;
       background: #000;
     }
 
-    .overlay-hint {
+    .nyan-hint {
       position: absolute;
-      bottom: 24px;
+      bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 25;
+      z-index: 11;
       background: rgba(0, 0, 0, 0.85);
       border: 1px solid var(--c-cyan);
-      padding: 9px 20px;
-      border-radius: 30px;
-      font-size: 13px;
       color: #fff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11.5px;
       display: none;
       pointer-events: none;
-      box-shadow: 0 0 18px rgba(56, 189, 248, 0.3);
-      animation: pulse 1.8s infinite;
-      text-align: center;
-      white-space: nowrap;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 0.75; transform: translateX(-50%) scale(1); }
-      50% { opacity: 1; transform: translateX(-50%) scale(1.03); }
-    }
-
-    /* Мобильная адаптивность */
-    @media (max-width: 720px) {
+    @media (max-width: 600px) {
       body { padding: 0; }
-      .terminal-window {
+      .terminal {
         height: 100vh;
-        max-height: none;
-        border-radius: 0;
         border: none;
+        border-radius: 0;
       }
-      .terminal-body {
-        font-size: 13px;
-        padding: 14px;
-      }
-      .grid-table {
-        grid-template-columns: 120px 1fr;
-        font-size: 12.5px;
-      }
-      .window-title { margin-right: 0; }
-      .ascii-box { font-size: 7.5px; }
-      .overlay-hint { font-size: 11px; padding: 6px 14px; width: 90%; }
+      .title { margin-right: 0; }
     }
   </style>
 </head>
 <body>
 
-  <div class="terminal-window" id="window">
-    <!-- Шапка окна -->
+  <div class="terminal" id="term-window">
     <div class="terminal-header">
-      <div class="window-controls">
-        <span class="dot dot-close" title="Закрыть" onclick="executeCommand('clear')"></span>
-        <span class="dot dot-min" title="Свернуть"></span>
-        <span class="dot dot-max" title="Развернуть" onclick="executeCommand('banner')"></span>
+      <div class="controls">
+        <span class="dot dot-red" onclick="executeCommand('clear')"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
       </div>
-      <div class="window-title">twinkfrix@linux:~ (zsh)</div>
+      <div class="title">twinkfrix@linux:~</div>
     </div>
 
-    <!-- Холсты для интерактива -->
-    <canvas id="matrix-canvas" class="fullscreen-overlay"></canvas>
-    <canvas id="nyan-canvas" class="fullscreen-overlay"></canvas>
-    <div id="overlay-hint" class="overlay-hint">Нажмите [ESC], [Q] или коснитесь экрана для выхода</div>
+    <!-- Canvas для Nyan Cat -->
+    <canvas id="nyan-canvas"></canvas>
+    <div id="nyan-hint" class="nyan-hint">Нажмите [ESC] или коснитесь экрана для выхода</div>
 
-    <!-- Тело консоли -->
     <div class="terminal-body" id="term-body">
       <div id="history"></div>
       <div id="boot-line" class="output"></div>
 
-      <!-- Активная строка ввода -->
       <div class="prompt-line" id="active-line" style="display: none;">
-        <span class="prompt-prefix">
-          <span class="user">twinkfrix</span><span class="at">@</span><span class="host">arch</span><span class="colon">:</span><span class="path">~</span><span class="char">$</span>
+        <span class="prompt">
+          <span class="u">twinkfrix</span><span class="d">@</span><span class="h">arch</span><span class="d">:</span><span class="p">~</span><span class="d">$</span>&nbsp;
         </span>
-        <div class="input-wrapper">
-          <input type="text" id="cli-input" class="cmd-input" autofocus autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <div class="input-box">
+          <input type="text" id="cli-input" class="cmd-input" autofocus autocomplete="off" spellcheck="false">
         </div>
       </div>
     </div>
@@ -407,48 +270,43 @@
       const cliInput = document.getElementById('cli-input');
       const history = document.getElementById('history');
       const termBody = document.getElementById('term-body');
-      const terminalWindow = document.getElementById('window');
-      
-      const matrixCanvas = document.getElementById('matrix-canvas');
+      const termWindow = document.getElementById('term-window');
       const nyanCanvas = document.getElementById('nyan-canvas');
-      const overlayHint = document.getElementById('overlay-hint');
-      const mCtx = matrixCanvas.getContext('2d');
+      const nyanHint = document.getElementById('nyan-hint');
       const nCtx = nyanCanvas.getContext('2d');
 
-      const bootMessage = "Инициализация протокола... Готово. Введите help для списка команд.";
-      let charIndex = 0;
+      const bootMsg = "Инициализация протокола... Готово. Введите help для списка команд.";
+      let charIdx = 0;
       let isBooting = true;
-      let activeAnimation = null; // 'matrix' | 'nyan' | null
+      let nyanRunning = false;
+      let nyanTimer = null;
 
-      const commandHistory = [];
-      let historyPos = -1;
-      const startTime = Date.now();
+      const cmdHistory = [];
+      let historyIdx = -1;
 
       function escapeHTML(str) {
-        return str
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;');
+        return str.replace(/[&<>"']/g, m => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+        }[m]));
       }
-
-      terminalWindow.addEventListener('click', (e) => {
-        if (e.target.tagName !== 'A' && !activeAnimation) {
-          cliInput.focus();
-        }
-      });
 
       function scrollToBottom() {
         termBody.scrollTop = termBody.scrollHeight;
       }
 
-      // Boot sequence
-      function typeBootSequence() {
-        if (charIndex < bootMessage.length) {
-          bootLine.textContent += bootMessage.charAt(charIndex);
-          charIndex++;
-          setTimeout(typeBootSequence, 24);
+      // Фокус на инпут при клике в окно терминала
+      termWindow.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'A' && !nyanRunning) {
+          cliInput.focus();
+        }
+      });
+
+      // Печатание строки инициализации
+      function typeBoot() {
+        if (charIdx < bootMsg.length) {
+          bootLine.textContent += bootMsg.charAt(charIdx);
+          charIdx++;
+          setTimeout(typeBoot, 22);
           scrollToBottom();
         } else {
           isBooting = false;
@@ -457,302 +315,36 @@
           scrollToBottom();
         }
       }
-      setTimeout(typeBootSequence, 200);
+      setTimeout(typeBoot, 150);
 
-      // ==========================================
-      // РЕЕСТР КОМАНД (ДЛЯ ПАГИНАЦИИ HELP)
-      // ==========================================
-      const commandList = [
-        // Страница 1: Основные и инфо
-        { name: 'help [стр]', desc: 'Справка по командам (пагинация по 10 команд)' },
-        { name: 'about', desc: 'Развернутое досье обо мне, стек и принципы' },
-        { name: 'fetch', desc: 'Системный неофетч в стиле Arch Linux' },
-        { name: 'skills', desc: 'Матрица ключевых компетенций и инструментов' },
-        { name: 'projects', desc: 'Список проектов, скриптов и наработок' },
-        { name: 'socials', desc: 'Контакты: Telegram, GitHub, Discord, Steam' },
-        { name: 'nyan', desc: 'Легендарный анимированный Nyan Cat с радугой!' },
-        { name: 'matrix', desc: 'Интерактивный цифровой дождь из Матрицы' },
-        { name: 'clear', desc: 'Полная очистка окна консоли' },
-        { name: 'whoami', desc: 'Информация о текущем пользователе и правах' },
-
-        // Страница 2: Утилиты и интерактив
-        { name: 'banner', desc: 'Большой неоновый ASCII-арт логотип' },
-        { name: 'cowsay [текст]', desc: 'Говорящая корова в терминале' },
-        { name: 'fortune', desc: 'Случайная цитата и мысль разработчика' },
-        { name: 'uptime', desc: 'Аптайм текущей сессии и системы' },
-        { name: 'date', desc: 'Текущая дата, точное время и таймзона' },
-        { name: 'weather', desc: 'Сводка погоды в локальном сегменте сети' },
-        { name: 'ping [хост]', desc: 'Проверка сетевого пинга до сервера' },
-        { name: 'history', desc: 'История выполненных в сессии команд' },
-        { name: 'repo', desc: 'Открыть исходный код этого сайта на GitHub' },
-        { name: 'sudo [команда]', desc: 'Попытка выполнить команду с root-правами' },
-
-        // Страница 3: Система и кастомизация
-        { name: 'cat [файл]', desc: 'Просмотр файлов (попробуйте: cat secret.txt)' },
-        { name: 'theme [имя]', desc: 'Смена темы: default, matrix, cyber, amber' },
-        { name: 'echo [текст]', desc: 'Вывести переданный текст в поток stdout' },
-        { name: 'contact', desc: 'Быстрые прямые каналы связи' },
-        { name: 'exit', desc: 'Завершить текущий сеанс терминала' }
-      ];
-
-      // ==========================================
-      // ОБРАБОТЧИКИ КОМАНД
-      // ==========================================
+      // Список команд
       const commands = {
-        help: (args) => {
-          const pageSize = 10;
-          const totalPages = Math.ceil(commandList.length / pageSize);
-          let requestedPage = parseInt(args[0], 10);
-
-          if (isNaN(requestedPage) || requestedPage < 1) {
-            requestedPage = 1;
-          }
-          if (requestedPage > totalPages) {
-            return `<span class="c-red">Ошибка:</span> Страницы <b>${requestedPage}</b> не существует. Всего страниц: <b>${totalPages}</b>.`;
-          }
-
-          const startIdx = (requestedPage - 1) * pageSize;
-          const currentBatch = commandList.slice(startIdx, startIdx + pageSize);
-
-          let output = `<span class="b c-cyan">══ [ СПРАВКА ПО КОМАНДАМ | СТРАНИЦА ${requestedPage} ИЗ ${totalPages} ] ══</span>\n`;
-          output += `<div class="separator"></div><div class="grid-table">`;
-
-          currentBatch.forEach(c => {
-            output += `<div><span class="c-green b">${escapeHTML(c.name)}</span></div><div>${escapeHTML(c.desc)}</div>`;
-          });
-
-          output += `</div><div class="separator"></div>`;
-          output += `<div class="pagination-bar">`;
-          output += `Всего команд: <span class="b c-white">${commandList.length}</span> | Текущая: <span class="b c-cyan">${requestedPage}/${totalPages}</span><br>`;
-          if (requestedPage < totalPages) {
-            output += `👉 Введите <span class="c-green b">help ${requestedPage + 1}</span> для следующей страницы.`;
-          } else {
-            output += `👉 Вы на последней странице. Введите <span class="c-green b">help 1</span> для возврата в начало.`;
-          }
-          output += `</div>`;
-          return output;
+        help: () => {
+          return `<span class="c-cyan b">Команды:</span>
+<div class="cmd-row">
+  <div><span class="c-green b">about</span></div>    <div>обо мне и стек</div>
+  <div><span class="c-green b">socials</span></div>  <div>контакты и соцсети</div>
+  <div><span class="c-green b">nyan</span></div>     <div>анимированный nyan cat</div>
+  <div><span class="c-green b">clear</span></div>    <div>очистить терминал</div>
+  <div><span class="c-green b">help</span></div>     <div>список команд</div>
+</div>`;
         },
 
         about: () => {
-          return `
-<span class="b c-cyan">══ [ DOSSIER: twinkfrix (Ярослав) ] ══</span>
-
-<span class="c-yellow b">● Идентичность:</span> Fullstack / Backend инженер & Linux-энтузиаст
-<span class="c-yellow b">● Никнейм:</span>    twinkfrix (yaroslav2282087)
-<span class="c-yellow b">● Философия:</span>   Unix-way, минимализм, скорость выполнения и автоматизация всего рутинного.
-
-<span class="c-yellow b">● Архитектура стека:</span>
-  • <span class="c-green">Языки:</span>        TypeScript, JavaScript (ESNext), Python 3, Go, POSIX Bash
-  • <span class="c-green">Бэкенд:</span>       Node.js, Express, Fastify, NestJS, REST API, WebSocket
-  • <span class="c-green">Базы данных:</span>   PostgreSQL, Redis, MongoDB, Prisma ORM
-  • <span class="c-green">Инфраструктура:</span> Arch Linux, Docker, Docker Compose, Nginx, Git, CI/CD
-  • <span class="c-green">Окружение:</span>     Neovim (Lua-конфиг), Zsh, Tmux, Kitty, Alacritty
-
-<span class="c-yellow b">● Текущий фокус:</span>
-  Высоконагруженные асинхронные сервисы, отказоустойчивые телеграм-боты,
-  утилиты командной строки и кастомизация Linux-систем.
-`;
-        },
-
-        fetch: () => {
-          const uptimeSec = Math.floor((Date.now() - startTime) / 1000);
-          const upStr = `${Math.floor(uptimeSec / 60)}m ${uptimeSec % 60}s (browser session)`;
-          
-          return `
-<span class="c-host b">       /\\         twinkfrix</span><span class="c-dim">@</span><span class="c-host b">archlinux</span>
-<span class="c-host b">      /  \\        ---------------------</span>
-<span class="c-host b">     /\\   \\       </span><span class="c-yellow">OS:</span> Arch Linux x86_64
-<span class="c-host b">    /      \\      </span><span class="c-yellow">Host:</span> Custom Cyberdeck Beast Edition
-<span class="c-host b">   /   ,,   \\     </span><span class="c-yellow">Kernel:</span> 6.10.9-zen2-1-zen
-<span class="c-host b">  /   |  |  -\\    </span><span class="c-yellow">Uptime:</span> ${upStr}
-<span class="c-host b"> /_-''    ''-_\\   </span><span class="c-yellow">Packages:</span> 1337 (pacman), 42 (flatpak)
-                  <span class="c-yellow">Shell:</span> zsh 5.9 (pure-agnoster)
-                  <span class="c-yellow">Terminal:</span> twinkfrix-web-cli / 4k
-                  <span class="c-yellow">CPU:</span> AMD Ryzen 9 7950X (32) @ 5.70GHz
-                  <span class="c-yellow">GPU:</span> NVIDIA GeForce RTX 4090 (24GB VRAM)
-                  <span class="c-yellow">Memory:</span> 14210MiB / 64250MiB [|||||.......] 22%
-
-  <span style="color:#ef4444">███</span><span style="color:#f97316">███</span><span style="color:#eab308">███</span><span style="color:#22c55e">███</span><span style="color:#06b6d4">███</span><span style="color:#3b82f6">███</span><span style="color:#a855f7">███</span><span style="color:#ec4899">███</span>
-`;
-        },
-
-        skills: () => {
-          return `
-<span class="b c-cyan">══ [ ТЕХНИЧЕСКИЙ АРСЕНАЛ ] ══</span>
-
-<span class="c-yellow b">[Backend & Runtime]</span>
-  <span class="badge">TypeScript</span> <span class="badge">Node.js</span> <span class="badge">Python</span> <span class="badge">Go</span> <span class="badge">REST / GraphQL</span> <span class="badge">WebSockets</span>
-
-<span class="c-yellow b">[Databases & Storage]</span>
-  <span class="badge">PostgreSQL</span> <span class="badge">Redis</span> <span class="badge">MongoDB</span> <span class="badge">Prisma</span> <span class="badge">TypeORM</span>
-
-<span class="c-yellow b">[DevOps & Environment]</span>
-  <span class="badge">Arch Linux</span> <span class="badge">Docker</span> <span class="badge">Docker Compose</span> <span class="badge">Nginx</span> <span class="badge">Git / GitHub Actions</span> <span class="badge">Bash Scripting</span>
-
-<span class="c-yellow b">[Tooling & Workflow]</span>
-  <span class="badge">Neovim</span> <span class="badge">Tmux</span> <span class="badge">Zsh</span> <span class="badge">Postman</span> <span class="badge">Linux Coreutils</span> <span class="badge">Fzf</span>
-`;
-        },
-
-        projects: () => {
-          return `
-<span class="b c-cyan">══ [ ИЗБРАННЫЕ ПРОЕКТЫ ] ══</span>
-
-1. <span class="c-green b">Interactive Terminal Portfolio</span> [HTML5 / Canvas / Vanilla JS]
-   • Высокоскоростной веб-терминал с поддержкой игр, анимаций и системных утилит.
-   • <span class="c-dim">Репозиторий:</span> <a class="term-link" href="https://github.com/yaroslav2282087" target="_blank">github.com/yaroslav2282087</a>
-
-2. <span class="c-green b">Telegram Bot Automation Ecosystem</span> [Node.js / TypeScript / Redis]
-   • Высоконагруженные боты для модерирования комьюнити, парсинга цен и нотификаций.
-
-3. <span class="c-green b">CLI Dotfiles & System Scripts</span> [Bash / Zsh / Lua / Hyprland]
-   • Полностью кастомное окружение под Arch Linux с тайлингом и горячими клавишами.
-
-4. <span class="c-green b">Microservice API Gateway</span> [Fastify / PostgreSQL / Docker]
-   • Асинхронный брокер запросов с JWT-авторизацией и кэшированием в Redis.
-`;
+          return `<span class="c-yellow b">twinkfrix (Ярослав)</span>
+─────────────────────────────────────
+• <span class="c-green">Стек:</span>     TypeScript, JavaScript, Python, Bash
+• <span class="c-green">ОС:</span>       Arch Linux / Neovim
+• <span class="c-green">Профиль:</span>  Бэкенд, CLI-скрипты, автоматизация`;
         },
 
         socials: () => {
-          return `
-<span class="b c-cyan">══ [ СОЦИАЛЬНЫЕ СЕТИ И СВЯЗЬ ] ══</span>
-
-  <span class="c-purple b">GitHub:</span>    <a class="term-link" href="https://github.com/yaroslav2282087" target="_blank" rel="noopener">github.com/yaroslav2282087</a>
-  <span class="c-blue b">Telegram:</span>  <a class="term-link" href="https://t.me/twinkfrix" target="_blank" rel="noopener">t.me/twinkfrix</a> <span class="c-dim">(замените на свой тег)</span>
-  <span class="c-cyan b">Discord:</span>   <span class="c-dim">@twinkfrix</span> <span class="c-dim">(добавляйтесь по логину)</span>
-  <span class="c-red b">Steam:</span>     <a class="term-link" href="https://steamcommunity.com/id/twinkfrix" target="_blank" rel="noopener">steamcommunity.com/id/twinkfrix</a>
-
-<span class="c-dim">Ссылки активны и открываются в новой вкладке.</span>`;
-        },
-
-        banner: () => {
-          return `<pre class="ascii-box">
-  _             _         _      __         _        
- | |_ __      __(_) _ __  | | __ / _| _ __  (_)__  __
- | __|\\ \\ /\\ / /| || '_ \\ | |/ /| |_ | '__| | |\\ \\/ /
- | |_  \\ V  V / | || | | ||   < |  _|| |    | | >  < 
-  \\__|  \\_/\\_/  |_||_| |_||_|\\_\\|_|  |_|    |_|/_/\\_\\
-                                                     
-    [ twinkfrix // Arch Linux // High-load Enthusiast ]
-</pre>`;
-        },
-
-        cowsay: (args) => {
-          const text = args.length > 0 ? args.join(' ') : 'twinkfrix стал по-настоящему жирным!';
-          const len = text.length + 2;
-          const line = '-'.repeat(len);
-          return `
- ${line}
-< ${escapeHTML(text)} >
- ${line}
-        \\   ^__^
-         \\  (oo)\\_______
-            (__)\\       )\\/\\
-                ||----w |
-                ||     ||
-`;
-        },
-
-        fortune: () => {
-          const quotes = [
-            "«Работает? Не трогай. Не работает? sudo rm -rf / и беги.»",
-            "«Существует 10 типов людей: те, кто понимают двоичный код, и те, кто нет.»",
-            "«Arch Linux не ломается сам по себе. Ты сам помогаешь ему сломаться.»",
-            "«Программирование — это разбиение одной большой проблемы на 10 маленьких непонятных проблем.»",
-            "«Хороший код документирует сам себя. Но плохой код документирует твои бессонные ночи.»",
-            "«Пинг 1ms, кофе 100°C, аптайм 99.99%. Идеальный баланс.»"
-          ];
-          const q = quotes[Math.floor(Math.random() * quotes.length)];
-          return `<span class="c-yellow">🔮 Мудрость:</span> ${q}`;
-        },
-
-        uptime: () => {
-          const s = Math.floor((Date.now() - startTime) / 1000);
-          return `<span class="c-green">up ${Math.floor(s / 3600)} hours, ${Math.floor((s % 3600) / 60)} minutes, ${s % 60} seconds</span>, load average: 0.12, 0.08, 0.03`;
-        },
-
-        date: () => {
-          return new Date().toString();
-        },
-
-        weather: () => {
-          return `
-<span class="c-cyan">Киберпространство / Localhost:</span>
-  🌡️  Температура: +21°C
-  ☁️  Облачность: Чистое цифровое небо, 0% потерь пакетов
-  💨  Ветер: 1 Gbit/s в направлении шлюза
-  ⚡  Шанс грозы в продакшене: минимальный
-`;
-        },
-
-        ping: (args) => {
-          const host = args[0] || '127.0.0.1';
-          const time = (Math.random() * 12 + 2).toFixed(2);
-          return `PING ${escapeHTML(host)} (56 data bytes)\n64 bytes from ${escapeHTML(host)}: icmp_seq=1 ttl=64 time=${time} ms\n--- ${escapeHTML(host)} ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss`;
-        },
-
-        whoami: () => {
-          return `<span class="c-green b">twinkfrix</span> (uid=1000 gid=1000 groups=1000(twinkfrix),4(adm),10(wheel),998(docker))`;
-        },
-
-        history: () => {
-          if (commandHistory.length === 0) return 'История команд пуста.';
-          return commandHistory.map((cmd, i) => ` ${i + 1}  ${escapeHTML(cmd)}`).join('\n');
-        },
-
-        repo: () => {
-          window.open('https://github.com/yaroslav2282087', '_blank');
-          return `Открываю репозиторий GitHub в новой вкладке...`;
-        },
-
-        sudo: (args) => {
-          const action = args.join(' ') || 'root';
-          return `<span class="c-red b">[SECURITY ALERT]</span> Пользователь twinkfrix не числится в файле sudoers. Об этом инциденте будет сообщено Санта-Клаусу.`;
-        },
-
-        cat: (args) => {
-          const file = args[0] ? args[0].toLowerCase() : '';
-          if (!file) return `<span class="c-red">Использование:</span> cat &lt;имя_файла&gt; (например: secret.txt, todo.md, flag)`;
-          if (file === 'secret.txt' || file === 'flag') {
-            return `<span class="c-purple b">FLAG{twinkfrix_arch_linux_terminal_god_mode}</span>`;
-          }
-          if (file === 'todo.md') {
-            return `- [x] Сделать один жирный сайт\n- [x] Добавить Nyan Cat\n- [ ] Захватить прод в 3 часа ночи`;
-          }
-          if (file === 'id_rsa') {
-            return `-----BEGIN OPENSSH PRIVATE KEY-----\nНе так быстро! Приватные ключи под строгим chmod 600 :)\n-----END OPENSSH PRIVATE KEY-----`;
-          }
-          return `<span class="c-red">cat: ${escapeHTML(args[0])}: Нет такого файла или каталога</span>`;
-        },
-
-        theme: (args) => {
-          const themeName = args[0] ? args[0].toLowerCase() : '';
-          document.body.className = '';
-          if (themeName === 'matrix') {
-            document.body.classList.add('theme-matrix');
-            return `Тема переключена на: <span class="c-green b">Matrix Green</span>`;
-          } else if (themeName === 'cyber') {
-            document.body.classList.add('theme-cyber');
-            return `Тема переключена на: <span class="c-purple b">Cyberpunk Neon</span>`;
-          } else if (themeName === 'amber') {
-            document.body.classList.add('theme-amber');
-            return `Тема переключена на: <span class="c-yellow b">Amber CRT</span>`;
-          } else if (themeName === 'default') {
-            return `Тема сброшена на: <span class="c-cyan b">Default Cyber Black</span>`;
-          }
-          return `Доступные темы: <span class="c-green">default</span>, <span class="c-green">matrix</span>, <span class="c-green">cyber</span>, <span class="c-green">amber</span>.\nПример: <span class="c-yellow">theme matrix</span>`;
-        },
-
-        echo: (args) => {
-          return escapeHTML(args.join(' '));
-        },
-
-        contact: () => {
-          return commands.socials();
-        },
-
-        exit: () => {
-          return `<span class="c-yellow">Сеанс не может быть завершен: веб-терминал — это ваш новый дом. Введите clear чтобы убрать текст.</span>`;
+          return `<span class="c-cyan b">Контакты:</span>
+─────────────────────────────────────
+• <span class="c-purple b">Telegram:</span> <a class="term-link" href="https://t.me/moggudp" target="_blank" rel="noopener">t.me/moggudp</a>
+• <span class="c-cyan b">GitHub:</span>   <a class="term-link" href="https://github.com/yaroslav2282087" target="_blank" rel="noopener">github.com/yaroslav2282087</a>
+• <span class="c-dim b">Discord:</span>  twinkfrix
+• <span class="c-red b">Steam:</span>    <a class="term-link" href="https://steamcommunity.com/id/twinkfrix" target="_blank" rel="noopener">twinkfrix</a>`;
         },
 
         clear: () => {
@@ -761,67 +353,52 @@
           return null;
         },
 
-        // Интерактивные анимации
-        matrix: () => {
-          startMatrix();
-          return null;
-        },
-
         nyan: () => {
-          startNyanCat();
+          startNyan();
           return null;
         }
       };
 
-      // Алиасы
-      commands['neofetch'] = commands.fetch;
-      commands['fastfetch'] = commands.fetch;
+      // Выполнение введенной команды
+      window.executeCommand = function (raw) {
+        const val = raw.trim();
+        if (!val) return;
 
-      // ==========================================
-      // ПАРСЕР И ВЫПОЛНЕНИЕ
-      // ==========================================
-      window.executeCommand = function (rawCommand) {
-        const trimmed = rawCommand.trim();
-        if (!trimmed) return;
-
-        commandHistory.push(rawCommand);
-        historyPos = commandHistory.length;
+        cmdHistory.push(raw);
+        historyIdx = cmdHistory.length;
 
         const entry = document.createElement('div');
         entry.className = 'history-entry';
         entry.innerHTML = `
           <div class="prompt-line">
-            <span class="prompt-prefix">
-              <span class="user">twinkfrix</span><span class="at">@</span><span class="host">arch</span><span class="colon">:</span><span class="path">~</span><span class="char">$</span>
+            <span class="prompt">
+              <span class="u">twinkfrix</span><span class="d">@</span><span class="h">arch</span><span class="d">:</span><span class="p">~</span><span class="d">$</span>&nbsp;
             </span>
-            <span>${escapeHTML(rawCommand)}</span>
+            <span>${escapeHTML(raw)}</span>
           </div>
         `;
 
-        const parts = trimmed.split(/\s+/);
-        const cmdKey = parts[0].toLowerCase();
-        const args = parts.slice(1);
+        const cmd = val.toLowerCase();
+        let result = '';
 
-        let resultHtml = '';
-
-        if (commands.hasOwnProperty(cmdKey)) {
-          resultHtml = commands[cmdKey](args);
+        if (commands.hasOwnProperty(cmd)) {
+          result = commands[cmd]();
         } else {
-          resultHtml = `<span class="c-red">bash: ${escapeHTML(parts[0])}: команда не найдена.</span> Введите <span class="c-green b">help</span> для списка доступных команд.`;
+          result = `<span class="c-red">bash: ${escapeHTML(val)}: команда не найдена.</span> Введите <span class="c-green b">help</span> для списка команд.`;
         }
 
-        if (resultHtml !== null) {
-          const output = document.createElement('div');
-          output.className = 'output';
-          output.innerHTML = resultHtml;
-          entry.appendChild(output);
+        if (result !== null) {
+          const out = document.createElement('div');
+          out.className = 'output';
+          out.innerHTML = result;
+          entry.appendChild(out);
           history.appendChild(entry);
         }
 
         scrollToBottom();
       };
 
-      // Обработка клавиш в строке ввода
+      // Слушатель клавиатуры
       cliInput.addEventListener('keydown', (e) => {
         if (isBooting) return;
 
@@ -831,261 +408,136 @@
           executeCommand(val);
         } else if (e.key === 'ArrowUp') {
           e.preventDefault();
-          if (historyPos > 0) {
-            historyPos--;
-            cliInput.value = commandHistory[historyPos] || '';
+          if (historyIdx > 0) {
+            historyIdx--;
+            cliInput.value = cmdHistory[historyIdx] || '';
           }
         } else if (e.key === 'ArrowDown') {
           e.preventDefault();
-          if (historyPos < commandHistory.length - 1) {
-            historyPos++;
-            cliInput.value = commandHistory[historyPos] || '';
+          if (historyIdx < cmdHistory.length - 1) {
+            historyIdx++;
+            cliInput.value = cmdHistory[historyIdx] || '';
           } else {
-            historyPos = commandHistory.length;
+            historyIdx = cmdHistory.length;
             cliInput.value = '';
           }
         } else if (e.key === 'Tab') {
           e.preventDefault();
-          const current = cliInput.value.toLowerCase().trim();
-          if (current) {
-            const allKeys = Object.keys(commands);
-            const match = allKeys.find(c => c.startsWith(current));
-            if (match) cliInput.value = match;
+          const cur = cliInput.value.toLowerCase().trim();
+          if (cur) {
+            const m = Object.keys(commands).find(c => c.startsWith(cur));
+            if (m) cliInput.value = m;
           }
-        } else if (e.ctrlKey && e.key.toLowerCase() === 'l') {
-          e.preventDefault();
-          commands.clear();
         }
       });
 
-      // ==========================================
-      // ИНТЕРАКТИВ 1: MATRIX DIGITAL RAIN
-      // ==========================================
-      let matrixTimer = null;
-      function startMatrix() {
-        activeAnimation = 'matrix';
-        matrixCanvas.width = terminalWindow.clientWidth;
-        matrixCanvas.height = terminalWindow.clientHeight - 42;
-        matrixCanvas.style.display = 'block';
-        overlayHint.style.display = 'block';
-
-        const alphabet = '0123456789ABCDEFｦｱｳｴｵｶｷｹｺｻｼｽｾｿﾀﾂﾃﾅﾆﾇﾈﾊﾋﾎﾏﾐﾑﾒﾓﾔﾕﾗﾘﾜ';
-        const fontSize = 16;
-        const columns = Math.floor(matrixCanvas.width / fontSize);
-        const drops = Array(columns).fill(1);
-
-        function draw() {
-          mCtx.fillStyle = 'rgba(0, 0, 0, 0.09)';
-          mCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-
-          mCtx.font = fontSize + 'px monospace';
-
-          for (let i = 0; i < drops.length; i++) {
-            const text = alphabet[Math.floor(Math.random() * alphabet.length)];
-            const x = i * fontSize;
-            const y = drops[i] * fontSize;
-
-            mCtx.fillStyle = '#86efac';
-            mCtx.fillText(text, x, y);
-
-            mCtx.fillStyle = '#10b981';
-
-            if (y > matrixCanvas.height && Math.random() > 0.975) {
-              drops[i] = 0;
-            }
-            drops[i]++;
-          }
-        }
-        matrixTimer = setInterval(draw, 33);
-      }
-
-      function stopMatrix() {
-        if (matrixTimer) {
-          clearInterval(matrixTimer);
-          matrixTimer = null;
-          matrixCanvas.style.display = 'none';
-        }
-      }
-
-      // ==========================================
-      // ИНТЕРАКТИВ 2: ANIMATED NYAN CAT
-      // ==========================================
-      let nyanTimer = null;
-      let nyanStartTime = 0;
-
-      function startNyanCat() {
-        activeAnimation = 'nyan';
-        nyanCanvas.width = terminalWindow.clientWidth;
-        nyanCanvas.height = terminalWindow.clientHeight - 42;
+      // ================= NYAN CAT ANIMATION =================
+      function startNyan() {
+        nyanRunning = true;
+        nyanCanvas.width = termWindow.clientWidth;
+        nyanCanvas.height = termWindow.clientHeight - 34;
         nyanCanvas.style.display = 'block';
-        overlayHint.style.display = 'block';
-        nyanStartTime = Date.now();
+        nyanHint.style.display = 'block';
 
-        // Звезды фона
-        const numStars = 65;
-        const stars = [];
-        for (let i = 0; i < numStars; i++) {
-          stars.push({
-            x: Math.random() * nyanCanvas.width,
-            y: Math.random() * nyanCanvas.height,
-            speed: Math.random() * 5 + 3,
-            size: Math.random() * 3 + 1,
-            blink: Math.random() * Math.PI
-          });
-        }
+        const stars = Array.from({ length: 45 }, () => ({
+          x: Math.random() * nyanCanvas.width,
+          y: Math.random() * nyanCanvas.height,
+          speed: Math.random() * 4 + 2,
+          size: Math.random() * 2.5 + 1
+        }));
 
         let tick = 0;
-        const rainbowColors = ['#ff0000', '#ff9900', '#ffff00', '#33ff00', '#0099ff', '#6633ff'];
+        const rainbow = ['#ff0000', '#ff9900', '#ffff00', '#33ff00', '#0099ff', '#6633ff'];
 
-        function drawNyan() {
+        function draw() {
           tick++;
           const w = nyanCanvas.width;
           const h = nyanCanvas.height;
 
-          // Глубокий космос
           nCtx.fillStyle = '#050713';
           nCtx.fillRect(0, 0, w, h);
 
-          // Отрисовка летящих звезд
+          // Звезды
+          nCtx.fillStyle = '#ffffff';
           for (let s of stars) {
             s.x -= s.speed;
-            s.blink += 0.08;
-            if (s.x < 0) {
-              s.x = w;
-              s.y = Math.random() * h;
-            }
-            const alpha = 0.4 + 0.6 * Math.sin(s.blink);
-            nCtx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+            if (s.x < 0) { s.x = w; s.y = Math.random() * h; }
             nCtx.fillRect(s.x, s.y, s.size, s.size);
           }
 
-          // Позиция кота по центру с покачиванием
-          const catX = w * 0.45;
-          const catY = (h / 2) + Math.sin(tick * 0.15) * 14;
+          const catX = w * 0.44;
+          const catY = (h / 2) + Math.sin(tick * 0.18) * 10;
 
-          // Рисуем радужный след
-          const stripeHeight = 6.5;
-          const waveLength = 26;
-          for (let x = 0; x < catX; x += 10) {
-            const waveOffset = Math.sin((x + tick * 4) / waveLength) * 8;
-            rainbowColors.forEach((color, i) => {
+          // Радуга
+          const sH = 5;
+          for (let x = 0; x < catX; x += 8) {
+            const wave = Math.sin((x + tick * 4) / 20) * 6;
+            rainbow.forEach((color, i) => {
               nCtx.fillStyle = color;
-              nCtx.fillRect(x, catY - (rainbowColors.length * stripeHeight) / 2 + (i * stripeHeight) + waveOffset, 12, stripeHeight);
+              nCtx.fillRect(x, catY - 15 + (i * sH) + wave, 10, sH);
             });
           }
 
-          // РИСОВАНИЕ ПИКСЕЛЬНОГО NYAN CAT
+          // Рисуем кота
           nCtx.save();
           nCtx.translate(catX, catY);
 
           // Хвост
-          const tailBounce = Math.sin(tick * 0.25) * 6;
-          nCtx.fillStyle = '#999999';
-          nCtx.fillRect(-44, 4 + tailBounce, 14, 7);
+          nCtx.fillStyle = '#999';
+          nCtx.fillRect(-34, 2 + Math.sin(tick * 0.3) * 4, 10, 5);
 
-          // Лапки
-          nCtx.fillStyle = '#999999';
-          const legMove = Math.sin(tick * 0.3) * 3;
-          nCtx.fillRect(-22 + legMove, 22, 9, 8);
-          nCtx.fillRect(16 - legMove, 22, 9, 8);
+          // Лапы
+          const leg = Math.sin(tick * 0.35) * 2;
+          nCtx.fillRect(-16 + leg, 16, 7, 6);
+          nCtx.fillRect(10 - leg, 16, 7, 6);
 
-          // Тело-тост (печенька Pop-Tart)
-          nCtx.fillStyle = '#ffd199'; // Корочка тоста
-          nCtx.fillRect(-28, -20, 56, 42);
-          nCtx.fillStyle = '#ff99cc'; // Розовая глазурь
-          nCtx.fillRect(-24, -16, 48, 34);
+          // Тост
+          nCtx.fillStyle = '#ffd199';
+          nCtx.fillRect(-20, -15, 40, 30);
+          nCtx.fillStyle = '#ff99cc';
+          nCtx.fillRect(-17, -12, 34, 24);
 
-          // Посыпка на тосте
-          nCtx.fillStyle = '#ff1493';
-          nCtx.fillRect(-18, -10, 4, 4);
-          nCtx.fillRect(-6, -4, 4, 4);
-          nCtx.fillRect(10, -12, 4, 4);
-          nCtx.fillRect(6, 6, 4, 4);
-          nCtx.fillRect(-12, 8, 4, 4);
+          // Голова
+          nCtx.fillStyle = '#999';
+          nCtx.fillRect(8, -10, 22, 18);
 
-          // Голова кота
-          nCtx.fillStyle = '#999999';
-          nCtx.fillRect(12, -14, 30, 24);
-
-          // Ушки
-          nCtx.beginPath();
-          nCtx.fillStyle = '#999999';
-          nCtx.moveTo(14, -14);
-          nCtx.lineTo(20, -26);
-          nCtx.lineTo(26, -14);
-          nCtx.fill();
-
-          nCtx.beginPath();
-          nCtx.moveTo(30, -14);
-          nCtx.lineTo(36, -26);
-          nCtx.lineTo(42, -14);
-          nCtx.fill();
+          // Уши
+          nCtx.fillRect(10, -16, 5, 6);
+          nCtx.fillRect(23, -16, 5, 6);
 
           // Глаза
-          nCtx.fillStyle = '#000000';
-          nCtx.fillRect(20, -8, 4, 5);
-          nCtx.fillRect(34, -8, 4, 5);
-          nCtx.fillStyle = '#ffffff';
-          nCtx.fillRect(20, -8, 2, 2);
-          nCtx.fillRect(34, -8, 2, 2);
+          nCtx.fillStyle = '#000';
+          nCtx.fillRect(14, -5, 3, 4);
+          nCtx.fillRect(24, -5, 3, 4);
 
-          // Носик и ротик
-          nCtx.fillStyle = '#000000';
-          nCtx.fillRect(28, -2, 3, 2);
-
-          // Румянец на щечках
+          // Щечки
           nCtx.fillStyle = '#ff6699';
-          nCtx.fillRect(14, -2, 5, 4);
-          nCtx.fillRect(38, -2, 5, 4);
+          nCtx.fillRect(10, -1, 3, 3);
+          nCtx.fillRect(27, -1, 3, 3);
 
           nCtx.restore();
-
-          // Таймер полета
-          const elapsed = Math.floor((Date.now() - nyanStartTime) / 1000);
-          nCtx.fillStyle = '#ffffff';
-          nCtx.font = 'bold 15px monospace';
-          nCtx.fillText(`★ NYAN TIME: ${elapsed}s ★`, 24, 36);
         }
 
-        nyanTimer = setInterval(drawNyan, 1000 / 30);
+        nyanTimer = setInterval(draw, 1000 / 30);
       }
 
-      function stopNyanCat() {
-        if (nyanTimer) {
+      function stopNyan() {
+        if (nyanRunning) {
           clearInterval(nyanTimer);
-          nyanTimer = null;
+          nyanRunning = false;
           nyanCanvas.style.display = 'none';
+          nyanHint.style.display = 'none';
+          cliInput.focus();
         }
-      }
-
-      // Выход из полноэкранных анимаций
-      function stopAnyAnimation() {
-        if (activeAnimation === 'matrix') stopMatrix();
-        if (activeAnimation === 'nyan') stopNyanCat();
-        activeAnimation = null;
-        overlayHint.style.display = 'none';
-        cliInput.focus();
       }
 
       window.addEventListener('keydown', (e) => {
-        if (activeAnimation && (e.key === 'Escape' || e.key === 'q' || e.key === 'Q')) {
-          stopAnyAnimation();
+        if (nyanRunning && (e.key === 'Escape' || e.key === 'q' || e.key === 'Q')) {
+          stopNyan();
         }
       });
 
-      matrixCanvas.addEventListener('click', stopAnyAnimation);
-      nyanCanvas.addEventListener('click', stopAnyAnimation);
-
-      window.addEventListener('resize', () => {
-        if (activeAnimation === 'matrix') {
-          matrixCanvas.width = terminalWindow.clientWidth;
-          matrixCanvas.height = terminalWindow.clientHeight - 42;
-        } else if (activeAnimation === 'nyan') {
-          nyanCanvas.width = terminalWindow.clientWidth;
-          nyanCanvas.height = terminalWindow.clientHeight - 42;
-        }
-      });
-
+      nyanCanvas.addEventListener('click', stopNyan);
     })();
   </script>
 </body>
