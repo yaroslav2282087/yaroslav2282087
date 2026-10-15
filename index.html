@@ -4,38 +4,73 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- Open Graph & Meta -->
+  <!-- Open Graph & SEO -->
   <title>twinkfrix@linux:~</title>
   <meta name="title" content="twinkfrix@linux:~">
-  <meta name="description" content="Персональный интерактивный терминал twinkfrix (yaroslav2282087). Обо мне, стек технологий, проекты и контакты.">
+  <meta name="description" content="twinkfrix (yaroslav2282087) — личный терминал разработчика. Стек, проекты, системный инфо-блок и интерактивные утилиты.">
   <meta name="author" content="twinkfrix">
-  <meta name="theme-color" content="#0d1117">
-  
+  <meta name="theme-color" content="#000000">
+
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://yaroslav2282087.github.io/">
   <meta property="og:title" content="twinkfrix@linux:~">
-  <meta property="og:description" content="Персональный интерактивный терминал twinkfrix (yaroslav2282087). Обо мне, стек технологий, проекты и контакты.">
-  
+  <meta property="og:description" content="twinkfrix (yaroslav2282087) — терминал разработчика. Стек, контакты, Nyan Cat и матрица.">
+
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://yaroslav2282087.github.io/">
   <meta property="twitter:title" content="twinkfrix@linux:~">
-  <meta property="twitter:description" content="Персональный интерактивный терминал twinkfrix (yaroslav2282087).">
+  <meta property="twitter:description" content="twinkfrix (yaroslav2282087) — терминал разработчика.">
 
   <style>
     :root {
-      --bg-color: #0b0e14;
-      --window-bg: #151921;
-      --header-bg: #1f2430;
-      --border-color: #2b3245;
-      --text-main: #d3dae3;
-      --prompt-user: #4ade80;
-      --prompt-host: #38bdf8;
-      --prompt-path: #facc15;
-      --accent-blue: #60a5fa;
-      --accent-purple: #c084fc;
-      --accent-red: #f87171;
-      --accent-dim: #64748b;
-      --font-stack: "JetBrains Mono", "Fira Code", Consolas, Monaco, "Courier New", Courier, monospace;
+      --bg-body: #000000;
+      --bg-terminal: #07090e;
+      --bg-header: #0e1118;
+      --border-color: #1e2433;
+      --text-main: #e2e8f0;
+      
+      --c-user: #10b981;
+      --c-host: #38bdf8;
+      --c-path: #fbbf24;
+      --c-cyan: #22d3ee;
+      --c-purple: #c084fc;
+      --c-red: #f87171;
+      --c-dim: #64748b;
+      --c-white: #ffffff;
+      --c-accent: #38bdf8;
+
+      --font-mono: ui-monospace, "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, monospace;
+    }
+
+    /* Альтернативные темы через команду theme */
+    body.theme-matrix {
+      --bg-terminal: #020b05;
+      --border-color: #064e1e;
+      --text-main: #4ade80;
+      --c-user: #22c55e;
+      --c-host: #16a34a;
+      --c-path: #86efac;
+      --c-accent: #22c55e;
+    }
+
+    body.theme-cyber {
+      --bg-terminal: #0a0614;
+      --border-color: #3b145a;
+      --text-main: #f5d0fe;
+      --c-user: #f43f5e;
+      --c-host: #06b6d4;
+      --c-path: #e879f9;
+      --c-accent: #d946ef;
+    }
+
+    body.theme-amber {
+      --bg-terminal: #0e0a02;
+      --border-color: #452c08;
+      --text-main: #fde68a;
+      --c-user: #f59e0b;
+      --c-host: #fbbf24;
+      --c-path: #d97706;
+      --c-accent: #f59e0b;
     }
 
     * {
@@ -45,24 +80,26 @@
     }
 
     body {
-      background-color: var(--bg-color);
+      background-color: var(--bg-body);
       color: var(--text-main);
-      font-family: var(--font-stack);
+      font-family: var(--font-mono);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 16px;
+      padding: 18px;
       overflow-x: hidden;
       position: relative;
     }
 
-    /* Фоновый эффект сетки */
+    /* Фоновый кибер-эффект */
     body::before {
       content: "";
-      position: absolute;
+      position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.04) 0%, transparent 80%);
+      background: 
+        radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.05) 0%, transparent 80%),
+        repeating-linear-gradient(rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(255, 255, 255, 0.012) 3px, rgba(255, 255, 255, 0.012) 4px);
       pointer-events: none;
       z-index: 0;
     }
@@ -70,25 +107,28 @@
     /* Окно терминала */
     .terminal-window {
       width: 100%;
-      max-width: 950px;
-      height: 85vh;
-      max-height: 820px;
-      min-height: 480px;
-      background: var(--window-bg);
+      max-width: 1060px;
+      height: 88vh;
+      max-height: 880px;
+      min-height: 520px;
+      background: var(--bg-terminal);
       border: 1px solid var(--border-color);
-      border-radius: 12px;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.08);
+      border-radius: 14px;
+      box-shadow: 
+        0 0 50px rgba(0, 0, 0, 0.95),
+        0 0 20px rgba(56, 189, 248, 0.06);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       position: relative;
       z-index: 1;
+      backdrop-filter: blur(8px);
     }
 
-    /* Верхняя плашка окна */
+    /* Шапка окна */
     .terminal-header {
-      background: var(--header-bg);
-      height: 40px;
+      background: var(--bg-header);
+      height: 42px;
       display: flex;
       align-items: center;
       padding: 0 16px;
@@ -106,29 +146,31 @@
       height: 12px;
       border-radius: 50%;
       display: inline-block;
+      transition: transform 0.2s ease, opacity 0.2s;
+      cursor: pointer;
     }
-
-    .dot-close { background: #ff5f56; }
-    .dot-minimize { background: #ffbd2e; }
-    .dot-maximize { background: #27c93f; }
+    .dot:hover { transform: scale(1.15); }
+    .dot-close { background: #ef4444; }
+    .dot-min { background: #f59e0b; }
+    .dot-max { background: #10b981; }
 
     .window-title {
       flex: 1;
       text-align: center;
       font-size: 13px;
-      color: var(--accent-dim);
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      margin-right: 48px; /* компенсация для точного центра */
+      color: var(--c-dim);
+      font-weight: 600;
+      letter-spacing: 0.6px;
+      margin-right: 52px;
     }
 
     /* Тело консоли */
     .terminal-body {
       flex: 1;
-      padding: 20px;
+      padding: 22px;
       overflow-y: auto;
-      font-size: 14.5px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.62;
       word-break: break-word;
       cursor: text;
     }
@@ -136,27 +178,24 @@
     .terminal-body::-webkit-scrollbar {
       width: 8px;
     }
-
     .terminal-body::-webkit-scrollbar-track {
       background: transparent;
     }
-
     .terminal-body::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.12);
+      background: #1f293d;
       border-radius: 4px;
     }
-
     .terminal-body::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.22);
+      background: #334155;
     }
 
-    /* Блоки вывода */
+    /* Вывод истории */
     .history-entry {
-      margin-bottom: 10px;
+      margin-bottom: 14px;
     }
 
     .output {
-      margin: 4px 0 12px 0;
+      margin: 6px 0 14px 0;
       white-space: pre-wrap;
     }
 
@@ -175,20 +214,18 @@
       white-space: nowrap;
     }
 
-    .user { color: var(--prompt-user); font-weight: bold; }
-    .at { color: var(--accent-dim); }
-    .host { color: var(--prompt-host); font-weight: bold; }
-    .colon { color: var(--accent-dim); }
-    .path { color: var(--prompt-path); }
+    .user { color: var(--c-user); font-weight: bold; }
+    .at { color: var(--c-dim); }
+    .host { color: var(--c-host); font-weight: bold; }
+    .colon { color: var(--c-dim); }
+    .path { color: var(--c-path); }
     .char { color: var(--text-main); font-weight: bold; margin-left: 2px; }
 
-    /* Поле ввода */
     .input-wrapper {
       display: flex;
       align-items: center;
       flex: 1;
       min-width: 140px;
-      position: relative;
     }
 
     .cmd-input {
@@ -199,48 +236,32 @@
       font-family: inherit;
       font-size: inherit;
       width: 100%;
-      caret-color: var(--prompt-user);
+      caret-color: var(--c-user);
       padding: 0;
       margin: 0;
     }
 
-    /* Стилизация вывода информации */
-    .c-green { color: var(--prompt-user); }
-    .c-blue { color: var(--accent-blue); }
-    .c-cyan { color: var(--prompt-host); }
-    .c-yellow { color: var(--prompt-path); }
-    .c-purple { color: var(--accent-purple); }
-    .c-red { color: var(--accent-red); }
-    .c-dim { color: var(--accent-dim); }
+    /* Стилизация и цвета текста */
+    .c-green { color: var(--c-user); }
+    .c-blue { color: var(--c-host); }
+    .c-cyan { color: var(--c-cyan); }
+    .c-yellow { color: var(--c-path); }
+    .c-purple { color: var(--c-purple); }
+    .c-red { color: var(--c-red); }
+    .c-dim { color: var(--c-dim); }
+    .c-white { color: var(--c-white); }
     .b { font-weight: bold; }
 
-    .help-table {
-      display: grid;
-      grid-template-columns: 140px 1fr;
-      row-gap: 6px;
-      margin: 8px 0;
-    }
-
     .term-link {
-      color: var(--accent-blue);
+      color: var(--c-cyan);
       text-decoration: none;
+      border-bottom: 1px dashed var(--c-cyan);
       transition: all 0.2s;
-      border-bottom: 1px dashed var(--accent-blue);
-      padding-bottom: 1px;
     }
-
     .term-link:hover {
-      color: #93c5fd;
+      color: #bae6fd;
       border-bottom-style: solid;
-      text-shadow: 0 0 8px rgba(96, 165, 250, 0.4);
-    }
-
-    .ascii-art {
-      font-size: 11px;
-      line-height: 1.15;
-      color: var(--prompt-host);
-      overflow-x: auto;
-      margin: 10px 0;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
     }
 
     .separator {
@@ -248,45 +269,82 @@
       margin: 10px 0;
     }
 
-    /* Холст эффекта Matrix */
-    #matrix-canvas {
-      position: absolute;
-      top: 40px;
-      left: 0;
-      width: 100%;
-      height: calc(100% - 40px);
-      z-index: 10;
-      background: rgba(11, 14, 20, 0.95);
-      display: none;
+    .badge {
+      display: inline-block;
+      padding: 1px 7px;
+      font-size: 11.5px;
+      border-radius: 4px;
+      background: #131d2e;
+      border: 1px solid #233552;
+      color: var(--c-cyan);
+      margin-right: 4px;
     }
 
-    .matrix-hint {
+    .grid-table {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      row-gap: 6px;
+      column-gap: 12px;
+      margin: 8px 0;
+    }
+
+    .pagination-bar {
+      margin-top: 10px;
+      padding: 6px 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 3px solid var(--c-host);
+      font-size: 13px;
+    }
+
+    .ascii-box {
+      font-family: monospace;
+      font-size: 11px;
+      line-height: 1.18;
+      overflow-x: auto;
+      margin: 6px 0;
+      color: var(--c-cyan);
+    }
+
+    /* Полноэкранные холсты для Nyan Cat и Matrix */
+    .fullscreen-overlay {
       position: absolute;
-      bottom: 20px;
+      top: 42px;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 42px);
+      z-index: 20;
+      display: none;
+      background: #000;
+    }
+
+    .overlay-hint {
+      position: absolute;
+      bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 11;
-      background: rgba(0, 0, 0, 0.75);
-      border: 1px solid var(--prompt-user);
-      padding: 8px 16px;
-      border-radius: 6px;
+      z-index: 25;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid var(--c-cyan);
+      padding: 9px 20px;
+      border-radius: 30px;
       font-size: 13px;
-      color: var(--prompt-user);
+      color: #fff;
       display: none;
       pointer-events: none;
-      animation: pulse 2s infinite;
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.3);
+      animation: pulse 1.8s infinite;
+      text-align: center;
+      white-space: nowrap;
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; }
+      0%, 100% { opacity: 0.75; transform: translateX(-50%) scale(1); }
+      50% { opacity: 1; transform: translateX(-50%) scale(1.03); }
     }
 
-    /* Адаптивность для мобильных */
-    @media (max-width: 640px) {
-      body {
-        padding: 0;
-      }
+    /* Мобильная адаптивность */
+    @media (max-width: 720px) {
+      body { padding: 0; }
       .terminal-window {
         height: 100vh;
         max-height: none;
@@ -295,41 +353,39 @@
       }
       .terminal-body {
         font-size: 13px;
-        padding: 12px;
+        padding: 14px;
       }
-      .help-table {
-        grid-template-columns: 100px 1fr;
+      .grid-table {
+        grid-template-columns: 120px 1fr;
+        font-size: 12.5px;
       }
-      .ascii-art {
-        font-size: 7.5px;
-      }
-      .window-title {
-        margin-right: 0;
-      }
+      .window-title { margin-right: 0; }
+      .ascii-box { font-size: 7.5px; }
+      .overlay-hint { font-size: 11px; padding: 6px 14px; width: 90%; }
     }
   </style>
 </head>
 <body>
 
   <div class="terminal-window" id="window">
+    <!-- Шапка окна -->
     <div class="terminal-header">
       <div class="window-controls">
-        <span class="dot dot-close"></span>
-        <span class="dot dot-minimize"></span>
-        <span class="dot dot-maximize"></span>
+        <span class="dot dot-close" title="Закрыть" onclick="executeCommand('clear')"></span>
+        <span class="dot dot-min" title="Свернуть"></span>
+        <span class="dot dot-max" title="Развернуть" onclick="executeCommand('banner')"></span>
       </div>
-      <div class="window-title">twinkfrix@linux:~</div>
+      <div class="window-title">twinkfrix@linux:~ (zsh)</div>
     </div>
 
-    <!-- Холст для пасхалки Matrix -->
-    <canvas id="matrix-canvas"></canvas>
-    <div class="matrix-hint" id="matrix-hint">Нажмите [ESC], [Q] или коснитесь экрана для выхода</div>
+    <!-- Холсты для интерактива -->
+    <canvas id="matrix-canvas" class="fullscreen-overlay"></canvas>
+    <canvas id="nyan-canvas" class="fullscreen-overlay"></canvas>
+    <div id="overlay-hint" class="overlay-hint">Нажмите [ESC], [Q] или коснитесь экрана для выхода</div>
 
+    <!-- Тело консоли -->
     <div class="terminal-body" id="term-body">
-      <!-- Сюда динамически добавляются результаты команд -->
       <div id="history"></div>
-
-      <!-- Строка инициализации при загрузке -->
       <div id="boot-line" class="output"></div>
 
       <!-- Активная строка ввода -->
@@ -352,20 +408,22 @@
       const history = document.getElementById('history');
       const termBody = document.getElementById('term-body');
       const terminalWindow = document.getElementById('window');
-      const canvas = document.getElementById('matrix-canvas');
-      const matrixHint = document.getElementById('matrix-hint');
-      const ctx = canvas.getContext('2d');
+      
+      const matrixCanvas = document.getElementById('matrix-canvas');
+      const nyanCanvas = document.getElementById('nyan-canvas');
+      const overlayHint = document.getElementById('overlay-hint');
+      const mCtx = matrixCanvas.getContext('2d');
+      const nCtx = nyanCanvas.getContext('2d');
 
       const bootMessage = "Инициализация протокола... Готово. Введите help для списка команд.";
       let charIndex = 0;
       let isBooting = true;
-      let matrixInterval = null;
+      let activeAnimation = null; // 'matrix' | 'nyan' | null
 
-      // История команд (навигация стрелками)
       const commandHistory = [];
       let historyPos = -1;
+      const startTime = Date.now();
 
-      // Экранирование вывода
       function escapeHTML(str) {
         return str
           .replace(/&/g, '&amp;')
@@ -375,24 +433,22 @@
           .replace(/'/g, '&#039;');
       }
 
-      // Фокусировка при клике в любое место окна (кроме кликов по ссылкам)
       terminalWindow.addEventListener('click', (e) => {
-        if (e.target.tagName !== 'A' && !matrixInterval) {
+        if (e.target.tagName !== 'A' && !activeAnimation) {
           cliInput.focus();
         }
       });
 
-      // Скролл вниз
       function scrollToBottom() {
         termBody.scrollTop = termBody.scrollHeight;
       }
 
-      // 1. Boot sequence: эффект печатания
+      // Boot sequence
       function typeBootSequence() {
         if (charIndex < bootMessage.length) {
           bootLine.textContent += bootMessage.charAt(charIndex);
           charIndex++;
-          setTimeout(typeBootSequence, 28);
+          setTimeout(typeBootSequence, 24);
           scrollToBottom();
         } else {
           isBooting = false;
@@ -401,71 +457,302 @@
           scrollToBottom();
         }
       }
+      setTimeout(typeBootSequence, 200);
 
-      setTimeout(typeBootSequence, 350);
+      // ==========================================
+      // РЕЕСТР КОМАНД (ДЛЯ ПАГИНАЦИИ HELP)
+      // ==========================================
+      const commandList = [
+        // Страница 1: Основные и инфо
+        { name: 'help [стр]', desc: 'Справка по командам (пагинация по 10 команд)' },
+        { name: 'about', desc: 'Развернутое досье обо мне, стек и принципы' },
+        { name: 'fetch', desc: 'Системный неофетч в стиле Arch Linux' },
+        { name: 'skills', desc: 'Матрица ключевых компетенций и инструментов' },
+        { name: 'projects', desc: 'Список проектов, скриптов и наработок' },
+        { name: 'socials', desc: 'Контакты: Telegram, GitHub, Discord, Steam' },
+        { name: 'nyan', desc: 'Легендарный анимированный Nyan Cat с радугой!' },
+        { name: 'matrix', desc: 'Интерактивный цифровой дождь из Матрицы' },
+        { name: 'clear', desc: 'Полная очистка окна консоли' },
+        { name: 'whoami', desc: 'Информация о текущем пользователе и правах' },
 
-      // ASCII-логотип
-      const bannerText = `
-  __             _         _      __         _        
- / /_ _      __ (_) ____  | | __ / /_  _____ (_) _  __
-/ __/| | /| / // // __ \\ | |/ // __/ / ___// // |/_/
-/ /_  | |/ |/ // // / / / |   </ / /_  / /   / / _>  <  
-\\__/  |__/|__//_//_/ /_/  |_|\\_\\\\__/ /_/   /_/ /_/|_|  
-                                                      
-   [ Arch Linux / Kernel: 6.8.9-arch1-1 / Shell: zsh ]
-`;
+        // Страница 2: Утилиты и интерактив
+        { name: 'banner', desc: 'Большой неоновый ASCII-арт логотип' },
+        { name: 'cowsay [текст]', desc: 'Говорящая корова в терминале' },
+        { name: 'fortune', desc: 'Случайная цитата и мысль разработчика' },
+        { name: 'uptime', desc: 'Аптайм текущей сессии и системы' },
+        { name: 'date', desc: 'Текущая дата, точное время и таймзона' },
+        { name: 'weather', desc: 'Сводка погоды в локальном сегменте сети' },
+        { name: 'ping [хост]', desc: 'Проверка сетевого пинга до сервера' },
+        { name: 'history', desc: 'История выполненных в сессии команд' },
+        { name: 'repo', desc: 'Открыть исходный код этого сайта на GitHub' },
+        { name: 'sudo [команда]', desc: 'Попытка выполнить команду с root-правами' },
 
-      // 2. Обработка команд
+        // Страница 3: Система и кастомизация
+        { name: 'cat [файл]', desc: 'Просмотр файлов (попробуйте: cat secret.txt)' },
+        { name: 'theme [имя]', desc: 'Смена темы: default, matrix, cyber, amber' },
+        { name: 'echo [текст]', desc: 'Вывести переданный текст в поток stdout' },
+        { name: 'contact', desc: 'Быстрые прямые каналы связи' },
+        { name: 'exit', desc: 'Завершить текущий сеанс терминала' }
+      ];
+
+      // ==========================================
+      // ОБРАБОТЧИКИ КОМАНД
+      // ==========================================
       const commands = {
-        help: () => {
-          return `
-<span class="b c-cyan">ДОСТУПНЫЕ КОМАНДЫ:</span>
-<div class="separator"></div>
-<div class="help-table">
-  <div><span class="c-green b">about</span></div>    <div>Информация обо мне, стек и интересы</div>
-  <div><span class="c-green b">socials</span></div>  <div>Ссылки на соцсети и контакты</div>
-  <div><span class="c-green b">banner</span></div>   <div>Вывести логотип twinkfrix</div>
-  <div><span class="c-green b">matrix</span></div>   <div>Интерактивный эффект матрицы</div>
-  <div><span class="c-green b">clear</span></div>    <div>Очистить терминал</div>
-  <div><span class="c-green b">help</span></div>     <div>Показать эту справку</div>
-</div>
-<div class="separator"></div>
-<span class="c-dim">Совет: нажимайте [Вверх]/[Вниз] для навигации по истории команд.</span>`;
+        help: (args) => {
+          const pageSize = 10;
+          const totalPages = Math.ceil(commandList.length / pageSize);
+          let requestedPage = parseInt(args[0], 10);
+
+          if (isNaN(requestedPage) || requestedPage < 1) {
+            requestedPage = 1;
+          }
+          if (requestedPage > totalPages) {
+            return `<span class="c-red">Ошибка:</span> Страницы <b>${requestedPage}</b> не существует. Всего страниц: <b>${totalPages}</b>.`;
+          }
+
+          const startIdx = (requestedPage - 1) * pageSize;
+          const currentBatch = commandList.slice(startIdx, startIdx + pageSize);
+
+          let output = `<span class="b c-cyan">══ [ СПРАВКА ПО КОМАНДАМ | СТРАНИЦА ${requestedPage} ИЗ ${totalPages} ] ══</span>\n`;
+          output += `<div class="separator"></div><div class="grid-table">`;
+
+          currentBatch.forEach(c => {
+            output += `<div><span class="c-green b">${escapeHTML(c.name)}</span></div><div>${escapeHTML(c.desc)}</div>`;
+          });
+
+          output += `</div><div class="separator"></div>`;
+          output += `<div class="pagination-bar">`;
+          output += `Всего команд: <span class="b c-white">${commandList.length}</span> | Текущая: <span class="b c-cyan">${requestedPage}/${totalPages}</span><br>`;
+          if (requestedPage < totalPages) {
+            output += `👉 Введите <span class="c-green b">help ${requestedPage + 1}</span> для следующей страницы.`;
+          } else {
+            output += `👉 Вы на последней странице. Введите <span class="c-green b">help 1</span> для возврата в начало.`;
+          }
+          output += `</div>`;
+          return output;
         },
 
         about: () => {
           return `
-<span class="b c-cyan">══ [ USER PROFILE: twinkfrix ] ══</span>
+<span class="b c-cyan">══ [ DOSSIER: twinkfrix (Ярослав) ] ══</span>
 
-<span class="b c-yellow">Никнейм:</span>      twinkfrix (Ярослав)
-<span class="b c-yellow">Локация:</span>      Киберпространство / Linux
-<span class="b c-yellow">Интересы:</span>     Backend-разработка, CLI-интерфейсы, автоматизация, Open Source
+<span class="c-yellow b">● Идентичность:</span> Fullstack / Backend инженер & Linux-энтузиаст
+<span class="c-yellow b">● Никнейм:</span>    twinkfrix (yaroslav2282087)
+<span class="c-yellow b">● Философия:</span>   Unix-way, минимализм, скорость выполнения и автоматизация всего рутинного.
 
-<span class="b c-yellow">Технологии & Стек:</span>
-  • <span class="c-green">Языки:</span>        JavaScript, TypeScript, Python, Bash
-  • <span class="c-green">Инструменты:</span>  Git, Docker, Linux (Arch/Debian), Neovim, VSCode
-  • <span class="c-green">Веб:</span>          HTML5, CSS3, REST API, Node.js
+<span class="c-yellow b">● Архитектура стека:</span>
+  • <span class="c-green">Языки:</span>        TypeScript, JavaScript (ESNext), Python 3, Go, POSIX Bash
+  • <span class="c-green">Бэкенд:</span>       Node.js, Express, Fastify, NestJS, REST API, WebSocket
+  • <span class="c-green">Базы данных:</span>   PostgreSQL, Redis, MongoDB, Prisma ORM
+  • <span class="c-green">Инфраструктура:</span> Arch Linux, Docker, Docker Compose, Nginx, Git, CI/CD
+  • <span class="c-green">Окружение:</span>     Neovim (Lua-конфиг), Zsh, Tmux, Kitty, Alacritty
 
-<span class="b c-yellow">О себе:</span>
-  Люблю чистый и читаемый код, терминальный минимализм и быстрые консольные
-  утилиты. Создаю удобные скрипты и практичные пет-проекты.
+<span class="c-yellow b">● Текущий фокус:</span>
+  Высоконагруженные асинхронные сервисы, отказоустойчивые телеграм-боты,
+  утилиты командной строки и кастомизация Linux-систем.
+`;
+        },
+
+        fetch: () => {
+          const uptimeSec = Math.floor((Date.now() - startTime) / 1000);
+          const upStr = `${Math.floor(uptimeSec / 60)}m ${uptimeSec % 60}s (browser session)`;
+          
+          return `
+<span class="c-host b">       /\\         twinkfrix</span><span class="c-dim">@</span><span class="c-host b">archlinux</span>
+<span class="c-host b">      /  \\        ---------------------</span>
+<span class="c-host b">     /\\   \\       </span><span class="c-yellow">OS:</span> Arch Linux x86_64
+<span class="c-host b">    /      \\      </span><span class="c-yellow">Host:</span> Custom Cyberdeck Beast Edition
+<span class="c-host b">   /   ,,   \\     </span><span class="c-yellow">Kernel:</span> 6.10.9-zen2-1-zen
+<span class="c-host b">  /   |  |  -\\    </span><span class="c-yellow">Uptime:</span> ${upStr}
+<span class="c-host b"> /_-''    ''-_\\   </span><span class="c-yellow">Packages:</span> 1337 (pacman), 42 (flatpak)
+                  <span class="c-yellow">Shell:</span> zsh 5.9 (pure-agnoster)
+                  <span class="c-yellow">Terminal:</span> twinkfrix-web-cli / 4k
+                  <span class="c-yellow">CPU:</span> AMD Ryzen 9 7950X (32) @ 5.70GHz
+                  <span class="c-yellow">GPU:</span> NVIDIA GeForce RTX 4090 (24GB VRAM)
+                  <span class="c-yellow">Memory:</span> 14210MiB / 64250MiB [|||||.......] 22%
+
+  <span style="color:#ef4444">███</span><span style="color:#f97316">███</span><span style="color:#eab308">███</span><span style="color:#22c55e">███</span><span style="color:#06b6d4">███</span><span style="color:#3b82f6">███</span><span style="color:#a855f7">███</span><span style="color:#ec4899">███</span>
+`;
+        },
+
+        skills: () => {
+          return `
+<span class="b c-cyan">══ [ ТЕХНИЧЕСКИЙ АРСЕНАЛ ] ══</span>
+
+<span class="c-yellow b">[Backend & Runtime]</span>
+  <span class="badge">TypeScript</span> <span class="badge">Node.js</span> <span class="badge">Python</span> <span class="badge">Go</span> <span class="badge">REST / GraphQL</span> <span class="badge">WebSockets</span>
+
+<span class="c-yellow b">[Databases & Storage]</span>
+  <span class="badge">PostgreSQL</span> <span class="badge">Redis</span> <span class="badge">MongoDB</span> <span class="badge">Prisma</span> <span class="badge">TypeORM</span>
+
+<span class="c-yellow b">[DevOps & Environment]</span>
+  <span class="badge">Arch Linux</span> <span class="badge">Docker</span> <span class="badge">Docker Compose</span> <span class="badge">Nginx</span> <span class="badge">Git / GitHub Actions</span> <span class="badge">Bash Scripting</span>
+
+<span class="c-yellow b">[Tooling & Workflow]</span>
+  <span class="badge">Neovim</span> <span class="badge">Tmux</span> <span class="badge">Zsh</span> <span class="badge">Postman</span> <span class="badge">Linux Coreutils</span> <span class="badge">Fzf</span>
+`;
+        },
+
+        projects: () => {
+          return `
+<span class="b c-cyan">══ [ ИЗБРАННЫЕ ПРОЕКТЫ ] ══</span>
+
+1. <span class="c-green b">Interactive Terminal Portfolio</span> [HTML5 / Canvas / Vanilla JS]
+   • Высокоскоростной веб-терминал с поддержкой игр, анимаций и системных утилит.
+   • <span class="c-dim">Репозиторий:</span> <a class="term-link" href="https://github.com/yaroslav2282087" target="_blank">github.com/yaroslav2282087</a>
+
+2. <span class="c-green b">Telegram Bot Automation Ecosystem</span> [Node.js / TypeScript / Redis]
+   • Высоконагруженные боты для модерирования комьюнити, парсинга цен и нотификаций.
+
+3. <span class="c-green b">CLI Dotfiles & System Scripts</span> [Bash / Zsh / Lua / Hyprland]
+   • Полностью кастомное окружение под Arch Linux с тайлингом и горячими клавишами.
+
+4. <span class="c-green b">Microservice API Gateway</span> [Fastify / PostgreSQL / Docker]
+   • Асинхронный брокер запросов с JWT-авторизацией и кэшированием в Redis.
 `;
         },
 
         socials: () => {
           return `
-<span class="b c-cyan">══ [ СОЦИАЛЬНЫЕ СЕТИ И КОНТАКТЫ ] ══</span>
+<span class="b c-cyan">══ [ СОЦИАЛЬНЫЕ СЕТИ И СВЯЗЬ ] ══</span>
 
-  <span class="b c-purple">GitHub:</span>    <a class="term-link" href="https://github.com/yaroslav2282087" target="_blank" rel="noopener noreferrer">github.com/yaroslav2282087</a>
-  <span class="b c-blue">Telegram:</span>  <a class="term-link" href="https://t.me/twinkfrix" target="_blank" rel="noopener noreferrer">t.me/twinkfrix</a> <span class="c-dim">(замените на свой юзернейм)</span>
-  <span class="b c-cyan">Discord:</span>   <span class="c-dim">@twinkfrix</span> <span class="c-dim">(добавляйтесь по нику)</span>
-  <span class="b c-red">Steam:</span>     <a class="term-link" href="https://steamcommunity.com/id/twinkfrix" target="_blank" rel="noopener noreferrer">steamcommunity.com/id/twinkfrix</a>
+  <span class="c-purple b">GitHub:</span>    <a class="term-link" href="https://github.com/yaroslav2282087" target="_blank" rel="noopener">github.com/yaroslav2282087</a>
+  <span class="c-blue b">Telegram:</span>  <a class="term-link" href="https://t.me/twinkfrix" target="_blank" rel="noopener">t.me/twinkfrix</a> <span class="c-dim">(замените на свой тег)</span>
+  <span class="c-cyan b">Discord:</span>   <span class="c-dim">@twinkfrix</span> <span class="c-dim">(добавляйтесь по логину)</span>
+  <span class="c-red b">Steam:</span>     <a class="term-link" href="https://steamcommunity.com/id/twinkfrix" target="_blank" rel="noopener">steamcommunity.com/id/twinkfrix</a>
 
-<span class="c-dim">Все ссылки кликабельны и открываются в новой вкладке.</span>`;
+<span class="c-dim">Ссылки активны и открываются в новой вкладке.</span>`;
         },
 
         banner: () => {
-          return `<pre class="ascii-art">${escapeHTML(bannerText)}</pre>`;
+          return `<pre class="ascii-box">
+  _             _         _      __         _        
+ | |_ __      __(_) _ __  | | __ / _| _ __  (_)__  __
+ | __|\\ \\ /\\ / /| || '_ \\ | |/ /| |_ | '__| | |\\ \\/ /
+ | |_  \\ V  V / | || | | ||   < |  _|| |    | | >  < 
+  \\__|  \\_/\\_/  |_||_| |_||_|\\_\\|_|  |_|    |_|/_/\\_\\
+                                                     
+    [ twinkfrix // Arch Linux // High-load Enthusiast ]
+</pre>`;
+        },
+
+        cowsay: (args) => {
+          const text = args.length > 0 ? args.join(' ') : 'twinkfrix стал по-настоящему жирным!';
+          const len = text.length + 2;
+          const line = '-'.repeat(len);
+          return `
+ ${line}
+< ${escapeHTML(text)} >
+ ${line}
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||
+`;
+        },
+
+        fortune: () => {
+          const quotes = [
+            "«Работает? Не трогай. Не работает? sudo rm -rf / и беги.»",
+            "«Существует 10 типов людей: те, кто понимают двоичный код, и те, кто нет.»",
+            "«Arch Linux не ломается сам по себе. Ты сам помогаешь ему сломаться.»",
+            "«Программирование — это разбиение одной большой проблемы на 10 маленьких непонятных проблем.»",
+            "«Хороший код документирует сам себя. Но плохой код документирует твои бессонные ночи.»",
+            "«Пинг 1ms, кофе 100°C, аптайм 99.99%. Идеальный баланс.»"
+          ];
+          const q = quotes[Math.floor(Math.random() * quotes.length)];
+          return `<span class="c-yellow">🔮 Мудрость:</span> ${q}`;
+        },
+
+        uptime: () => {
+          const s = Math.floor((Date.now() - startTime) / 1000);
+          return `<span class="c-green">up ${Math.floor(s / 3600)} hours, ${Math.floor((s % 3600) / 60)} minutes, ${s % 60} seconds</span>, load average: 0.12, 0.08, 0.03`;
+        },
+
+        date: () => {
+          return new Date().toString();
+        },
+
+        weather: () => {
+          return `
+<span class="c-cyan">Киберпространство / Localhost:</span>
+  🌡️  Температура: +21°C
+  ☁️  Облачность: Чистое цифровое небо, 0% потерь пакетов
+  💨  Ветер: 1 Gbit/s в направлении шлюза
+  ⚡  Шанс грозы в продакшене: минимальный
+`;
+        },
+
+        ping: (args) => {
+          const host = args[0] || '127.0.0.1';
+          const time = (Math.random() * 12 + 2).toFixed(2);
+          return `PING ${escapeHTML(host)} (56 data bytes)\n64 bytes from ${escapeHTML(host)}: icmp_seq=1 ttl=64 time=${time} ms\n--- ${escapeHTML(host)} ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss`;
+        },
+
+        whoami: () => {
+          return `<span class="c-green b">twinkfrix</span> (uid=1000 gid=1000 groups=1000(twinkfrix),4(adm),10(wheel),998(docker))`;
+        },
+
+        history: () => {
+          if (commandHistory.length === 0) return 'История команд пуста.';
+          return commandHistory.map((cmd, i) => ` ${i + 1}  ${escapeHTML(cmd)}`).join('\n');
+        },
+
+        repo: () => {
+          window.open('https://github.com/yaroslav2282087', '_blank');
+          return `Открываю репозиторий GitHub в новой вкладке...`;
+        },
+
+        sudo: (args) => {
+          const action = args.join(' ') || 'root';
+          return `<span class="c-red b">[SECURITY ALERT]</span> Пользователь twinkfrix не числится в файле sudoers. Об этом инциденте будет сообщено Санта-Клаусу.`;
+        },
+
+        cat: (args) => {
+          const file = args[0] ? args[0].toLowerCase() : '';
+          if (!file) return `<span class="c-red">Использование:</span> cat &lt;имя_файла&gt; (например: secret.txt, todo.md, flag)`;
+          if (file === 'secret.txt' || file === 'flag') {
+            return `<span class="c-purple b">FLAG{twinkfrix_arch_linux_terminal_god_mode}</span>`;
+          }
+          if (file === 'todo.md') {
+            return `- [x] Сделать один жирный сайт\n- [x] Добавить Nyan Cat\n- [ ] Захватить прод в 3 часа ночи`;
+          }
+          if (file === 'id_rsa') {
+            return `-----BEGIN OPENSSH PRIVATE KEY-----\nНе так быстро! Приватные ключи под строгим chmod 600 :)\n-----END OPENSSH PRIVATE KEY-----`;
+          }
+          return `<span class="c-red">cat: ${escapeHTML(args[0])}: Нет такого файла или каталога</span>`;
+        },
+
+        theme: (args) => {
+          const themeName = args[0] ? args[0].toLowerCase() : '';
+          document.body.className = '';
+          if (themeName === 'matrix') {
+            document.body.classList.add('theme-matrix');
+            return `Тема переключена на: <span class="c-green b">Matrix Green</span>`;
+          } else if (themeName === 'cyber') {
+            document.body.classList.add('theme-cyber');
+            return `Тема переключена на: <span class="c-purple b">Cyberpunk Neon</span>`;
+          } else if (themeName === 'amber') {
+            document.body.classList.add('theme-amber');
+            return `Тема переключена на: <span class="c-yellow b">Amber CRT</span>`;
+          } else if (themeName === 'default') {
+            return `Тема сброшена на: <span class="c-cyan b">Default Cyber Black</span>`;
+          }
+          return `Доступные темы: <span class="c-green">default</span>, <span class="c-green">matrix</span>, <span class="c-green">cyber</span>, <span class="c-green">amber</span>.\nПример: <span class="c-yellow">theme matrix</span>`;
+        },
+
+        echo: (args) => {
+          return escapeHTML(args.join(' '));
+        },
+
+        contact: () => {
+          return commands.socials();
+        },
+
+        exit: () => {
+          return `<span class="c-yellow">Сеанс не может быть завершен: веб-терминал — это ваш новый дом. Введите clear чтобы убрать текст.</span>`;
         },
 
         clear: () => {
@@ -474,22 +761,32 @@
           return null;
         },
 
+        // Интерактивные анимации
         matrix: () => {
           startMatrix();
+          return null;
+        },
+
+        nyan: () => {
+          startNyanCat();
           return null;
         }
       };
 
-      // Выполнение команды
-      function executeCommand(rawCommand) {
+      // Алиасы
+      commands['neofetch'] = commands.fetch;
+      commands['fastfetch'] = commands.fetch;
+
+      // ==========================================
+      // ПАРСЕР И ВЫПОЛНЕНИЕ
+      // ==========================================
+      window.executeCommand = function (rawCommand) {
         const trimmed = rawCommand.trim();
         if (!trimmed) return;
 
-        // Сохраняем в историю
         commandHistory.push(rawCommand);
         historyPos = commandHistory.length;
 
-        // Создаем запись предыдущей строки в историю
         const entry = document.createElement('div');
         entry.className = 'history-entry';
         entry.innerHTML = `
@@ -501,13 +798,16 @@
           </div>
         `;
 
-        const cmdKey = trimmed.toLowerCase();
+        const parts = trimmed.split(/\s+/);
+        const cmdKey = parts[0].toLowerCase();
+        const args = parts.slice(1);
+
         let resultHtml = '';
 
         if (commands.hasOwnProperty(cmdKey)) {
-          resultHtml = commands[cmdKey]();
+          resultHtml = commands[cmdKey](args);
         } else {
-          resultHtml = `<span class="c-red">bash: ${escapeHTML(trimmed)}: команда не найдена.</span> Введите <span class="c-green b">help</span> для списка доступных команд.`;
+          resultHtml = `<span class="c-red">bash: ${escapeHTML(parts[0])}: команда не найдена.</span> Введите <span class="c-green b">help</span> для списка доступных команд.`;
         }
 
         if (resultHtml !== null) {
@@ -519,9 +819,9 @@
         }
 
         scrollToBottom();
-      }
+      };
 
-      // Обработка клавиш в поле ввода
+      // Обработка клавиш в строке ввода
       cliInput.addEventListener('keydown', (e) => {
         if (isBooting) return;
 
@@ -545,87 +845,245 @@
             cliInput.value = '';
           }
         } else if (e.key === 'Tab') {
-          // Автокомплит команд
           e.preventDefault();
           const current = cliInput.value.toLowerCase().trim();
           if (current) {
-            const match = Object.keys(commands).find(c => c.startsWith(current));
+            const allKeys = Object.keys(commands);
+            const match = allKeys.find(c => c.startsWith(current));
             if (match) cliInput.value = match;
           }
+        } else if (e.ctrlKey && e.key.toLowerCase() === 'l') {
+          e.preventDefault();
+          commands.clear();
         }
       });
 
-      // 3. Пасхалка: Matrix Digital Rain
-      function resizeCanvas() {
-        canvas.width = terminalWindow.clientWidth;
-        canvas.height = terminalWindow.clientHeight - 40;
-      }
-
+      // ==========================================
+      // ИНТЕРАКТИВ 1: MATRIX DIGITAL RAIN
+      // ==========================================
+      let matrixTimer = null;
       function startMatrix() {
-        resizeCanvas();
-        canvas.style.display = 'block';
-        matrixHint.style.display = 'block';
+        activeAnimation = 'matrix';
+        matrixCanvas.width = terminalWindow.clientWidth;
+        matrixCanvas.height = terminalWindow.clientHeight - 42;
+        matrixCanvas.style.display = 'block';
+        overlayHint.style.display = 'block';
 
-        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        const alphabet = katakana + latin;
-
-        const fontSize = 15;
-        const columns = Math.floor(canvas.width / fontSize);
-        const rainDrops = [];
-
-        for (let x = 0; x < columns; x++) {
-          rainDrops[x] = 1;
-        }
+        const alphabet = '0123456789ABCDEFｦｱｳｴｵｶｷｹｺｻｼｽｾｿﾀﾂﾃﾅﾆﾇﾈﾊﾋﾎﾏﾐﾑﾒﾓﾔﾕﾗﾘﾜ';
+        const fontSize = 16;
+        const columns = Math.floor(matrixCanvas.width / fontSize);
+        const drops = Array(columns).fill(1);
 
         function draw() {
-          ctx.fillStyle = 'rgba(11, 14, 20, 0.12)';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          mCtx.fillStyle = 'rgba(0, 0, 0, 0.09)';
+          mCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
 
-          ctx.fillStyle = '#0F0';
-          ctx.font = fontSize + 'px monospace';
+          mCtx.font = fontSize + 'px monospace';
 
-          for (let i = 0; i < rainDrops.length; i++) {
-            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+          for (let i = 0; i < drops.length; i++) {
+            const text = alphabet[Math.floor(Math.random() * alphabet.length)];
             const x = i * fontSize;
-            const y = rainDrops[i] * fontSize;
+            const y = drops[i] * fontSize;
 
-            // Голова капли ярче
-            ctx.fillStyle = '#bbf7d0';
-            ctx.fillText(text, x, y);
+            mCtx.fillStyle = '#86efac';
+            mCtx.fillText(text, x, y);
 
-            ctx.fillStyle = '#22c55e';
+            mCtx.fillStyle = '#10b981';
 
-            if (y > canvas.height && Math.random() > 0.975) {
-              rainDrops[i] = 0;
+            if (y > matrixCanvas.height && Math.random() > 0.975) {
+              drops[i] = 0;
             }
-            rainDrops[i]++;
+            drops[i]++;
           }
         }
-
-        matrixInterval = setInterval(draw, 33);
+        matrixTimer = setInterval(draw, 33);
       }
 
       function stopMatrix() {
-        if (matrixInterval) {
-          clearInterval(matrixInterval);
-          matrixInterval = null;
-          canvas.style.display = 'none';
-          matrixHint.style.display = 'none';
-          cliInput.focus();
+        if (matrixTimer) {
+          clearInterval(matrixTimer);
+          matrixTimer = null;
+          matrixCanvas.style.display = 'none';
         }
       }
 
-      // Выход из матрицы по кнопкам или клику
+      // ==========================================
+      // ИНТЕРАКТИВ 2: ANIMATED NYAN CAT
+      // ==========================================
+      let nyanTimer = null;
+      let nyanStartTime = 0;
+
+      function startNyanCat() {
+        activeAnimation = 'nyan';
+        nyanCanvas.width = terminalWindow.clientWidth;
+        nyanCanvas.height = terminalWindow.clientHeight - 42;
+        nyanCanvas.style.display = 'block';
+        overlayHint.style.display = 'block';
+        nyanStartTime = Date.now();
+
+        // Звезды фона
+        const numStars = 65;
+        const stars = [];
+        for (let i = 0; i < numStars; i++) {
+          stars.push({
+            x: Math.random() * nyanCanvas.width,
+            y: Math.random() * nyanCanvas.height,
+            speed: Math.random() * 5 + 3,
+            size: Math.random() * 3 + 1,
+            blink: Math.random() * Math.PI
+          });
+        }
+
+        let tick = 0;
+        const rainbowColors = ['#ff0000', '#ff9900', '#ffff00', '#33ff00', '#0099ff', '#6633ff'];
+
+        function drawNyan() {
+          tick++;
+          const w = nyanCanvas.width;
+          const h = nyanCanvas.height;
+
+          // Глубокий космос
+          nCtx.fillStyle = '#050713';
+          nCtx.fillRect(0, 0, w, h);
+
+          // Отрисовка летящих звезд
+          for (let s of stars) {
+            s.x -= s.speed;
+            s.blink += 0.08;
+            if (s.x < 0) {
+              s.x = w;
+              s.y = Math.random() * h;
+            }
+            const alpha = 0.4 + 0.6 * Math.sin(s.blink);
+            nCtx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+            nCtx.fillRect(s.x, s.y, s.size, s.size);
+          }
+
+          // Позиция кота по центру с покачиванием
+          const catX = w * 0.45;
+          const catY = (h / 2) + Math.sin(tick * 0.15) * 14;
+
+          // Рисуем радужный след
+          const stripeHeight = 6.5;
+          const waveLength = 26;
+          for (let x = 0; x < catX; x += 10) {
+            const waveOffset = Math.sin((x + tick * 4) / waveLength) * 8;
+            rainbowColors.forEach((color, i) => {
+              nCtx.fillStyle = color;
+              nCtx.fillRect(x, catY - (rainbowColors.length * stripeHeight) / 2 + (i * stripeHeight) + waveOffset, 12, stripeHeight);
+            });
+          }
+
+          // РИСОВАНИЕ ПИКСЕЛЬНОГО NYAN CAT
+          nCtx.save();
+          nCtx.translate(catX, catY);
+
+          // Хвост
+          const tailBounce = Math.sin(tick * 0.25) * 6;
+          nCtx.fillStyle = '#999999';
+          nCtx.fillRect(-44, 4 + tailBounce, 14, 7);
+
+          // Лапки
+          nCtx.fillStyle = '#999999';
+          const legMove = Math.sin(tick * 0.3) * 3;
+          nCtx.fillRect(-22 + legMove, 22, 9, 8);
+          nCtx.fillRect(16 - legMove, 22, 9, 8);
+
+          // Тело-тост (печенька Pop-Tart)
+          nCtx.fillStyle = '#ffd199'; // Корочка тоста
+          nCtx.fillRect(-28, -20, 56, 42);
+          nCtx.fillStyle = '#ff99cc'; // Розовая глазурь
+          nCtx.fillRect(-24, -16, 48, 34);
+
+          // Посыпка на тосте
+          nCtx.fillStyle = '#ff1493';
+          nCtx.fillRect(-18, -10, 4, 4);
+          nCtx.fillRect(-6, -4, 4, 4);
+          nCtx.fillRect(10, -12, 4, 4);
+          nCtx.fillRect(6, 6, 4, 4);
+          nCtx.fillRect(-12, 8, 4, 4);
+
+          // Голова кота
+          nCtx.fillStyle = '#999999';
+          nCtx.fillRect(12, -14, 30, 24);
+
+          // Ушки
+          nCtx.beginPath();
+          nCtx.fillStyle = '#999999';
+          nCtx.moveTo(14, -14);
+          nCtx.lineTo(20, -26);
+          nCtx.lineTo(26, -14);
+          nCtx.fill();
+
+          nCtx.beginPath();
+          nCtx.moveTo(30, -14);
+          nCtx.lineTo(36, -26);
+          nCtx.lineTo(42, -14);
+          nCtx.fill();
+
+          // Глаза
+          nCtx.fillStyle = '#000000';
+          nCtx.fillRect(20, -8, 4, 5);
+          nCtx.fillRect(34, -8, 4, 5);
+          nCtx.fillStyle = '#ffffff';
+          nCtx.fillRect(20, -8, 2, 2);
+          nCtx.fillRect(34, -8, 2, 2);
+
+          // Носик и ротик
+          nCtx.fillStyle = '#000000';
+          nCtx.fillRect(28, -2, 3, 2);
+
+          // Румянец на щечках
+          nCtx.fillStyle = '#ff6699';
+          nCtx.fillRect(14, -2, 5, 4);
+          nCtx.fillRect(38, -2, 5, 4);
+
+          nCtx.restore();
+
+          // Таймер полета
+          const elapsed = Math.floor((Date.now() - nyanStartTime) / 1000);
+          nCtx.fillStyle = '#ffffff';
+          nCtx.font = 'bold 15px monospace';
+          nCtx.fillText(`★ NYAN TIME: ${elapsed}s ★`, 24, 36);
+        }
+
+        nyanTimer = setInterval(drawNyan, 1000 / 30);
+      }
+
+      function stopNyanCat() {
+        if (nyanTimer) {
+          clearInterval(nyanTimer);
+          nyanTimer = null;
+          nyanCanvas.style.display = 'none';
+        }
+      }
+
+      // Выход из полноэкранных анимаций
+      function stopAnyAnimation() {
+        if (activeAnimation === 'matrix') stopMatrix();
+        if (activeAnimation === 'nyan') stopNyanCat();
+        activeAnimation = null;
+        overlayHint.style.display = 'none';
+        cliInput.focus();
+      }
+
       window.addEventListener('keydown', (e) => {
-        if (matrixInterval && (e.key === 'Escape' || e.key === 'q' || e.key === 'Q')) {
-          stopMatrix();
+        if (activeAnimation && (e.key === 'Escape' || e.key === 'q' || e.key === 'Q')) {
+          stopAnyAnimation();
         }
       });
 
-      canvas.addEventListener('click', stopMatrix);
+      matrixCanvas.addEventListener('click', stopAnyAnimation);
+      nyanCanvas.addEventListener('click', stopAnyAnimation);
+
       window.addEventListener('resize', () => {
-        if (matrixInterval) resizeCanvas();
+        if (activeAnimation === 'matrix') {
+          matrixCanvas.width = terminalWindow.clientWidth;
+          matrixCanvas.height = terminalWindow.clientHeight - 42;
+        } else if (activeAnimation === 'nyan') {
+          nyanCanvas.width = terminalWindow.clientWidth;
+          nyanCanvas.height = terminalWindow.clientHeight - 42;
+        }
       });
 
     })();
